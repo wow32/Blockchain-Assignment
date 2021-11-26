@@ -1,6 +1,43 @@
 // SPDX-License-Identifier: GPL-3.0
 
+/*
+1. Developer deposit tokens (Lee Min) 
+- Handle max capacity
+- Handle time to start and end
+- tokens leave in contract
+- Percentage of acceptance (eg. 60%)
+
+2. User participate in crowdsale
+-  Record user purchase in credits
+- Check if sale already started and ended already
+- Only accept ETH
+- User purchase per limit
+
+3. After sales
+- check percentage, if not satisfy send tokens back to developer 
+- pull over push method to let user withdraw
+- refund left crypto to developer (if have)
+
+4. Admin
+- withdraw all funds
+- lock contract 
+- update admin (timelock?)
+
+Todo: 
+- Fee calculations
+- Events should be emitted
+- Public getters
+- Price per token
+- Test cases to make sure everything works as expected
+- 10000000000000000000 fucking decimals
+- Map credit to multiple launchpad id
+
+Design UI (Yuan Jie)
+*/
+
 pragma solidity ^0.8.9;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract LaunchPad {
 
@@ -16,6 +53,7 @@ contract LaunchPad {
         uint acceptancePercentage;
         uint totalTokens;
         address sender;
+        address tokenAddress;
     }
     mapping (uint => LaunchPadInformation) public launchpads;
     uint public totalLaunchpads = 0;
@@ -48,7 +86,7 @@ contract LaunchPad {
 
     //DEVELOPER DEPOSIT
     //TODO: should we use Unix timestamp? Or number of days?
-    function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _totalTokens) public payable isLock {
+    function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _totalTokens, address _tokenAddress) public payable isLock {
 
         //would be cleaner if put into internal function
         require(_startTime > block.timestamp, "Cannot start in past date"); //front-end should handle the conversion from date to Unix timestamp
@@ -61,14 +99,15 @@ contract LaunchPad {
         //TODO: check for duplicate msg.sender, how?
         //require(launchpads[msg.sender].endTimeStamp == 0, "This account has an existing bid");
 
-        //msg.value represents eth, we cannot do this, needs to change in future
-        //TODO: handle unlimited approval, transfer funds to this contract
-        //https://ethereum.stackexchange.com/questions/110972/how-to-transfer-erc20-tokens-to-a-contract-on-a-function-call
+        // TODO: Front end need to handle approval, just set it as unlimited
+        IERC20 customToken = IERC20(_tokenAddress);
+        require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient Allowance"); 
+        require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "transfer Failed");
+
         require(_totalTokens >= minimumTokens, "Need more tokens to process");
 
         uint _endTimeStamp = block.timestamp + (_numOfDays * 1 days);
         require(_endTimeStamp >= _startTime, "something is really wrong here");
-
                
         //if someone have a better idea lmk
         //https://programtheblockchain.com/posts/2018/01/12/writing-a-contract-that-handles-time/
@@ -81,7 +120,7 @@ contract LaunchPad {
         totalLaunchpads += 1;
 
         //We assume msg.sender is developer, if it's not we are fucked up
-        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, _totalTokens, msg.sender);
+        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, _totalTokens, msg.sender, _tokenAddress);
  
     }
 

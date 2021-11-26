@@ -4,7 +4,10 @@
 
 [Launchpad.sol](contracts/Launchpad.sol)
 
+
 ## Installation
+> To develop use Remix IDE directly
+
 #### Clone the GitHub repository
 
 ```
