@@ -51,16 +51,19 @@ contract LaunchPad {
         uint startTimeStamp;
         uint endTimeStamp;
         uint acceptancePercentage;
+        uint milestone;
         uint totalTokens;
+        //ufixed pricePerToken;
         address sender;
         address tokenAddress;
     }
     mapping (uint => LaunchPadInformation) public launchpads;
     uint public totalLaunchpads = 0;
-    uint minNumberofDays = 10;
-    uint minimumTokens = 1000;
-    uint maxNumberofDays = 60; 
-    
+    mapping (address => uint) public launchedTokens;
+    uint public minNumberofDays = 10;
+    uint public minimumTokens = 1000;
+    uint public maxNumberofDays = 60; 
+    //ufixed public minPricePerToken = 0.1; //todo allow admin change
 
     mapping(address => uint) credits; //user bid money, save it here
 
@@ -85,43 +88,52 @@ contract LaunchPad {
     }
 
     //DEVELOPER DEPOSIT
-    //TODO: should we use Unix timestamp? Or number of days?
+
+    //TODO: handle allowances
+
     function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _totalTokens, address _tokenAddress) public payable isLock {
 
-        //would be cleaner if put into internal function
-        require(_startTime > block.timestamp, "Cannot start in past date"); //front-end should handle the conversion from date to Unix timestamp
+        // @front-end should handle the conversion from date to Unix timestamp
+
+        //verify time logic
+        require(_startTime > block.timestamp, "Cannot start in past date");
         require(_numOfDays <= minNumberofDays, "Whoops, can't be that long");
         require(_numOfDays >= minNumberofDays, "too short"); 
         require(_numOfDays <= maxNumberofDays, "Whoops, can't be that long");
+        uint _endTimeStamp = block.timestamp + (_numOfDays * 1 days);
+        require(_endTimeStamp >= _startTime, "something is really wrong here");
+
+        //verify percentage rate
         require(_acceptedPercentage >= 50, "Must be over 50% acceptance");
         require(_acceptedPercentage <= 100, "Must be less than 100% acceptance");
 
-        //TODO: check for duplicate msg.sender, how?
-        //require(launchpads[msg.sender].endTimeStamp == 0, "This account has an existing bid");
+        //verify existing launchpad for specifc token address
+        require(launchedTokens[_tokenAddress] == 0, "This account has an existing launchpad");
 
-        // TODO: Front end need to handle approval, just set it as unlimited
-        IERC20 customToken = IERC20(_tokenAddress);
-        require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient Allowance"); 
-        require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "transfer Failed");
-
+        //verify minimum tokens
         require(_totalTokens >= minimumTokens, "Need more tokens to process");
 
-        uint _endTimeStamp = block.timestamp + (_numOfDays * 1 days);
-        require(_endTimeStamp >= _startTime, "something is really wrong here");
-               
-        //if someone have a better idea lmk
-        //https://programtheblockchain.com/posts/2018/01/12/writing-a-contract-that-handles-time/
-        //see if you want handle time in Unix timestamp, or use days like start after 2 days then end in 30 days
+        //verify fees
+        //require(_pricePerToken >= minPricePerToken, "Supplied price per token value too small");
+        uint protocolFee = calculateFee(_totalTokens);
+        require(msg.value >= protocolFee, "Not enough fees paid"); 
 
-        //TODO: calculate fee based on fee = msg.value
-        //TODO: formula? 
+        //calculate required acceptance tokens
+        uint milestoneRequired = calculateAcceptanceRate(_totalTokens, _acceptedPercentage);
 
-        //increment lauchpad id
+        // fund contract with developer custom ERC20 token
+        IERC20 customToken = IERC20(_tokenAddress);
+        require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance"); 
+        require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
+
+        //increment lauchpad id and update values
         totalLaunchpads += 1;
+        launchedTokens[_tokenAddress] = totalLaunchpads;
 
         //We assume msg.sender is developer, if it's not we are fucked up
-        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, _totalTokens, msg.sender, _tokenAddress);
- 
+        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, msg.sender, _tokenAddress);
+
+        //emit event
     }
 
     function getLaunchPadInformation(uint _launchPadId) public view returns (address) {
@@ -183,16 +195,19 @@ contract LaunchPad {
 
     //ADMIN OPERATIONS
     function changeMaxNumOfDays(uint _numOfDays) public onlyOwner {
+        require(_numOfDays >= minNumberofDays, "Supplied days is smaller than minimum number of days");
         maxNumberofDays = _numOfDays;
         //emit event
     }
 
     function changeMinNumOfDays(uint _numOfDays) public onlyOwner {
+        require(_numOfDays <= maxNumberofDays, "Supplied days is bigger than maximum number of days");
         minNumberofDays = _numOfDays;
         //emit event
     }
 
     function changeMinimumTokens(uint _minimumTokens) public onlyOwner {
+        require(_minimumTokens > 0, "Cannot set as 0");
         minimumTokens = _minimumTokens;
         //emit event
     }
@@ -212,6 +227,20 @@ contract LaunchPad {
         //TODO: some checking to verify address
         //TODO: add timelock
         owner = _newOwner;
+    }
+
+    //add admin remove launchpads
+
+    //add required functions like totalsupply
+
+    function calculateFee(uint _totalTokens) public view returns (uint) {
+        uint totalFee = (_totalTokens * fee) / 100; //multiply before divide
+        return totalFee * 1 ether;
+    }
+
+    function calculateAcceptanceRate(uint _totalTokens, uint _acceptedRate) public pure returns (uint) {
+        uint milestone = (_totalTokens * _acceptedRate) / 100; 
+        return milestone;
     }
 
 }
