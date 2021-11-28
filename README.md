@@ -4,6 +4,28 @@
 
 [Launchpad.sol](contracts/Launchpad.sol)
 
+## Calculation Fees
+``` solidity
+feeToPaid = totalTokens * protocolFeePercentage * ethUnit
+```
+- `totalTokens`: Total amount of tokens developer wants to launch, eg. `1000`
+- `protocolFeePercentage`: Service fee taken by protocol, eg. `1%`
+- `ethUnit`: ETH is denominated by Wei and doesn't support decimals, we will be using `0.001 ETH`, eg. `10 ** 16`
+
+Example:
+```solidity
+ function calculate() public pure returns (uint) {
+        // Formula: totalTokens * protocolFeePercentage * ethUnit
+        uint _totalTokens = 1000; // 1000 tokens to launch
+        uint _protocolFeePercentage = 1; // 1%
+        uint _ethUnit = 10 ** 16; // 0.001 ETH
+
+        uint feePercentage = (_totalTokens * _protocolFeePercentage) / 100; //multiply before division
+        uint feeToPaid = feePercentage * _ethUnit;
+        return feeToPaid; //returns 100000000000000000 Wei = 0.1 ETH, source: https://eth-converter.com/
+    }
+```
+
 
 ## Installation
 > To develop use Remix IDE directly
