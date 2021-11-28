@@ -87,9 +87,9 @@ contract LaunchPad {
         isLocked = _isLocked;
     }
 
-    //DEVELOPER DEPOSIT
+    /// DEVELOPER DEPOSIT
 
-    //TODO: handle allowances
+    //TODO: handle allowances = unlimited @lee-min 
 
     function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _totalTokens, address _tokenAddress) public payable isLock {
 
@@ -122,7 +122,9 @@ contract LaunchPad {
         uint milestoneRequired = calculateAcceptanceRate(_totalTokens, _acceptedPercentage);
 
         // fund contract with developer custom ERC20 token
-        IERC20 customToken = IERC20(_tokenAddress);
+        //https://ethereum.stackexchange.com/questions/60940/what-is-ierc20
+        //TODO: address check effect integration
+        IERC20 customToken = IERC20(_tokenAddress); //check if it will limit to 18 decimals
         require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance"); 
         require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
@@ -136,6 +138,7 @@ contract LaunchPad {
         //emit event
     }
 
+    //TODO: return all to front-end
     function getLaunchPadInformation(uint _launchPadId) public view returns (address) {
         require(totalLaunchpads <= _launchPadId, "that no exist");
         return launchpads[_launchPadId].sender;
@@ -146,7 +149,7 @@ contract LaunchPad {
         return block.timestamp;
     }
 
-    //USER OPERATIONS
+    /// USER OPERATIONS
     function buyLaunchPadToken(uint _launchpadId) public payable isLock {
         //check launchpadId stuff
         require(_launchpadId <= totalLaunchpads, "Invalid launchpadId");
@@ -154,7 +157,7 @@ contract LaunchPad {
         require(block.timestamp <= launchpads[_launchpadId].endTimeStamp, "it already ended");
 
         //check msg.value to determine bid amount
-        require(msg.value > 0 ether, "send money pls");
+        require(msg.value > 0 ether, "send money pls"); //todo change msg.value 
 
         //only allow maximum 100 eth per user
         if ((credits[msg.sender] += msg.value) <= 100){
@@ -164,7 +167,7 @@ contract LaunchPad {
         }
     }
 
-    //AFTER SALES
+    /// AFTER SALES
     function settleLaunchPad() public isLock {
         //check percentage
         //
@@ -233,6 +236,7 @@ contract LaunchPad {
 
     //add required functions like totalsupply
 
+    /// Helper functions
     function calculateFee(uint _totalTokens) public view returns (uint) {
         uint totalFee = (_totalTokens * fee) / 100; //multiply before divide
         return totalFee * 1 ether;
