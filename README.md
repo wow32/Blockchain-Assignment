@@ -4,7 +4,8 @@
 
 [Launchpad.sol](contracts/Launchpad.sol)
 
-## Calculation Fees
+## Protocol Fees
+The protocol will take a small percentage of fees from the developers in order to operate the system and eat bread.
 ``` solidity
 feeToPaid = totalTokens * protocolFeePercentage * ethUnit
 ```
@@ -25,6 +26,7 @@ Example:
         return feeToPaid; //returns 100000000000000000 Wei = 0.1 ETH, source: https://eth-converter.com/
     }
 ```
+The above example shows that the developer is required to deposit 0.1 ETH as protocol fees when attempting to launch 1000 tokens to the launchpad set at 1%.
 
 
 ## Installation
