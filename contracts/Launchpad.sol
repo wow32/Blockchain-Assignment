@@ -44,7 +44,7 @@ contract LaunchPad {
     //Admin variables
     bool isLocked; //lock contract in case shit happens
     address owner; //owner of this contract
-    uint fee = 5; //fee is 5% by default
+    uint fee = 1; //fee is 1% by default
 
     //Launchpad variables
     struct LaunchPadInformation {
@@ -53,7 +53,7 @@ contract LaunchPad {
         uint acceptancePercentage;
         uint milestone;
         uint totalTokens;
-        //ufixed pricePerToken;
+        uint pricePerToken;
         address sender;
         address tokenAddress;
     }
@@ -63,7 +63,6 @@ contract LaunchPad {
     uint public minNumberofDays = 10;
     uint public minimumTokens = 1000;
     uint public maxNumberofDays = 60; 
-    //ufixed public minPricePerToken = 0.1; //todo allow admin change
 
     mapping(address => uint) credits; //user bid money, save it here
 
@@ -91,9 +90,10 @@ contract LaunchPad {
 
     //TODO: handle allowances = unlimited @lee-min 
 
-    function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _totalTokens, address _tokenAddress) public payable isLock {
+    function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _pricePerToken, uint _totalTokens, address _tokenAddress) public payable isLock {
 
         // @front-end should handle the conversion from date to Unix timestamp
+        // @front-end need to handle price decimal conversion, eg. 1000 = 0.001 ETH
 
         //verify time logic
         require(_startTime > block.timestamp, "Cannot start in past date");
@@ -114,9 +114,12 @@ contract LaunchPad {
         require(_totalTokens >= minimumTokens, "Need more tokens to process");
 
         //verify fees
-        //require(_pricePerToken >= minPricePerToken, "Supplied price per token value too small");
         uint protocolFee = calculateFee(_totalTokens);
         require(msg.value >= protocolFee, "Not enough fees paid"); 
+
+        //verify _pricePerToken, limit 1 to 10**18, hence we can only accept 18 decimals contract
+        require(_pricePerToken >= 1, "max 1 ether per token");
+        require(_pricePerToken <= 1 ether, "you exceeded minimum _pricePerToken");
 
         //calculate required acceptance tokens
         uint milestoneRequired = calculateAcceptanceRate(_totalTokens, _acceptedPercentage);
@@ -124,7 +127,8 @@ contract LaunchPad {
         // fund contract with developer custom ERC20 token
         //https://ethereum.stackexchange.com/questions/60940/what-is-ierc20
         //TODO: address check effect integration
-        IERC20 customToken = IERC20(_tokenAddress); //check if it will limit to 18 decimals
+        //TODO: only accept 18 decimals 
+        IERC20 customToken = IERC20(_tokenAddress); 
         require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance"); 
         require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
@@ -133,7 +137,7 @@ contract LaunchPad {
         launchedTokens[_tokenAddress] = totalLaunchpads;
 
         //We assume msg.sender is developer, if it's not we are fucked up
-        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, msg.sender, _tokenAddress);
+        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, _pricePerToken, msg.sender, _tokenAddress);
 
         //emit event
     }
@@ -151,20 +155,26 @@ contract LaunchPad {
 
     /// USER OPERATIONS
     function buyLaunchPadToken(uint _launchpadId) public payable isLock {
-        //check launchpadId stuff
+
+        //check launchpad stuff
         require(_launchpadId <= totalLaunchpads, "Invalid launchpadId");
         require(block.timestamp > launchpads[_launchpadId].startTimeStamp, "haven't started yet");
         require(block.timestamp <= launchpads[_launchpadId].endTimeStamp, "it already ended");
+        require(launchpads[_launchpadId].totalTokens > 0, "No tokens left");
 
-        //check msg.value to determine bid amount
-        require(msg.value > 0 ether, "send money pls"); //todo change msg.value 
+        //calculation price stuffs
+        uint launchpadPricePerToken = launchpads[_launchpadId].pricePerToken;
+        uint minimumFunds = 1 ether / launchpadPricePerToken;
+        require(msg.value >= minimumFunds, "Sent funds not enough to buy tokens!");
+        uint amountToBuy = msg.value * launchpadPricePerToken;
+        uint tokensToBuy = amountToBuy / (10 ** 18);
 
-        //only allow maximum 100 eth per user
-        if ((credits[msg.sender] += msg.value) <= 100){
-            credits[msg.sender] += msg.value;
-        } else {
-            revert("You exceeded the maximum bid which is 100 ETH");
-        }
+        launchpads[_launchpadId].totalTokens = launchpads[_launchpadId].totalTokens - tokensToBuy;
+
+        //TODO: add credits based on launchPadId
+        credits[msg.sender] += tokensToBuy;
+
+        //TODO: should we make price more expensive on last puchase? or we make it average?
     }
 
     /// AFTER SALES
@@ -239,7 +249,7 @@ contract LaunchPad {
     /// Helper functions
     function calculateFee(uint _totalTokens) public view returns (uint) {
         uint totalFee = (_totalTokens * fee) / 100; //multiply before divide
-        return totalFee * 1 ether;
+        return totalFee * 10 ** 16; // refer to README for calculation
     }
 
     function calculateAcceptanceRate(uint _totalTokens, uint _acceptedRate) public pure returns (uint) {
