@@ -1,39 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0
-
-/*
-1. Developer deposit tokens (Lee Min) 
-- Handle max capacity
-- Handle time to start and end
-- tokens leave in contract
-- Percentage of acceptance (eg. 60%)
-
-2. User participate in crowdsale
--  Record user purchase in credits
-- Check if sale already started and ended already
-- Only accept ETH
-- User purchase per limit
-
-3. After sales
-- check percentage, if not satisfy send tokens back to developer 
-- pull over push method to let user withdraw
-- refund left crypto to developer (if have)
-
-4. Admin
-- withdraw all funds
-- lock contract 
-- update admin (timelock?)
-
-Todo: 
-- Fee calculations
-- Events should be emitted
-- Public getters
-- Price per token
-- Test cases to make sure everything works as expected
-- 10000000000000000000 fucking decimals
-- Map credit to multiple launchpad id
-
-Design UI (Yuan Jie)
-*/
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.9;
 
@@ -81,7 +46,7 @@ contract LaunchPad {
 
     //CONSTRUCTOR
 
-    constructor (bool _isLocked){
+    constructor (bool _isLocked) payable {
         owner = msg.sender;
         isLocked = _isLocked;
     }
@@ -141,7 +106,7 @@ contract LaunchPad {
         //emit event
     }
 
-    //TODO: return all to front-end
+    //TODO: return all to front-end @lee-min
     function getLaunchPadInformation(uint _launchPadId) public view returns (address) {
         require(totalLaunchpads <= _launchPadId, "that no exist");
         return launchpads[_launchPadId].sender;
@@ -172,8 +137,6 @@ contract LaunchPad {
 
         //TODO: add credits based on launchPadId
         credits[msg.sender] += tokensToBuy;
-
-        //TODO: should we make price more expensive on last puchase? or we make it average?
     }
 
     /// AFTER SALES
@@ -243,7 +206,7 @@ contract LaunchPad {
 
     //add admin remove launchpads
 
-    //add required functions like totalsupply
+    //add required functions like totalsupply @lee-min
 
     /// Helper functions
     function calculateFee(uint _totalTokens) public view returns (uint) {
