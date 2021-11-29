@@ -84,3 +84,6 @@ truffle compile
 - [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
 - [ ] Refactor code for readability
 
+## References
+1. https://eth-converter.com/
+2. https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC20
