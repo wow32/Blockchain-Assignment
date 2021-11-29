@@ -43,18 +43,16 @@ git clone https://github.com/wow32/Blockchain-Assignment
 truffle compile
 ```
 
-## Organization
-1. Developer deposit tokens (Lee Min) 
+## Work Flow
+1. Developer deposit tokens 
 - Handle max capacity
 - Handle time to start and end
-- tokens leave in contract
 - Percentage of acceptance (eg. 60%)
 
 2. User participate in crowdsale
 - Record user purchase in credits
 - Check if sale already started and ended already
 - Only accept ETH
-- User purchase per limit
 
 3. After sales
 - check percentage, if not satisfy send tokens back to developer 
@@ -66,14 +64,15 @@ truffle compile
 - lock contract 
 - update admin (timelock?)
 
-5. Design UI (Yuan Jie)
+5. Front end design
+- web3 js integration
 
 ## TODO:
-- [ ] Fee calculations
+- [x] Fee calculations
 - [ ] Events should be emitted
 - [ ] Public getters
-- [ ] Price per token
+- [x] Price per token
 - [ ] Test cases to make sure everything works as expected
-- [ ] Limit to 18 decimals
+- [x] Limit to 18 decimals
 - [ ] Map credit to multiple launchpad id
 
