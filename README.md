@@ -67,6 +67,12 @@ truffle compile
 5. Front end design
 - web3 js integration
 
+## Future improvements
+1. Allowing developer to launch token address more than one time
+2. Use other funds instead of ETH
+3. Dynamic calculation system
+4. Gas optimization
+
 ## TODO:
 - [x] Fee calculations
 - [ ] Events should be emitted
@@ -77,3 +83,4 @@ truffle compile
 - [ ] Map credit to multiple launchpad id
 - [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
 - [ ] Refactor code for readability
+
