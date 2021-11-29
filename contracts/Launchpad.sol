@@ -62,7 +62,6 @@ contract LaunchPad {
 
         //verify time logic
         require(_startTime > block.timestamp, "Cannot start in past date");
-        require(_numOfDays <= minNumberofDays, "Whoops, can't be that long");
         require(_numOfDays >= minNumberofDays, "too short"); 
         require(_numOfDays <= maxNumberofDays, "Whoops, can't be that long");
         uint _endTimeStamp = block.timestamp + (_numOfDays * 1 days);
