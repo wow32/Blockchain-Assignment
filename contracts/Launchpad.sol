@@ -37,7 +37,7 @@ Design UI (Yuan Jie)
 
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol"; //we use https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC20 to get decimals()
 
 contract LaunchPad {
 
@@ -125,10 +125,9 @@ contract LaunchPad {
         uint milestoneRequired = calculateAcceptanceRate(_totalTokens, _acceptedPercentage);
 
         // fund contract with developer custom ERC20 token
-        //https://ethereum.stackexchange.com/questions/60940/what-is-ierc20
         //TODO: address check effect integration
-        //TODO: only accept 18 decimals 
-        IERC20 customToken = IERC20(_tokenAddress); 
+        ERC20 customToken = ERC20(_tokenAddress); 
+        require(customToken.decimals() == 18, "We only accept 18 decimals tokens");
         require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance"); 
         require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
@@ -187,13 +186,13 @@ contract LaunchPad {
 
         //if enough percentage
         //1. send rest of tokens back to developer
-        //2. user withdraw erc20 token
+        //2. allow user withdraw erc20 token
         //3. send ether to developer
     }
 
     //TODO: must be modified
     function withdrawCredits() public isLock {
-        //check if launchpad is over end date
+        //check if launchpad is over acceptancePercentage, if yes allow withdrawal
 
         uint amount = credits[msg.sender];
 
