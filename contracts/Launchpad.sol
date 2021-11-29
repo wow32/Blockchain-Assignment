@@ -17,10 +17,14 @@ contract LaunchPad {
         uint endTimeStamp;
         uint acceptancePercentage;
         uint milestone;
+        uint originalAmountofTokens;
         uint totalTokens;
         uint pricePerToken;
         address sender;
         address tokenAddress;
+        bool paid;
+        bool allowUserWithdraw;
+        uint creditType; //0: Unset, 1: ETH, 2: Token
     }
     mapping (uint => LaunchPadInformation) public launchpads;
     uint public totalLaunchpads = 0;
@@ -29,7 +33,12 @@ contract LaunchPad {
     uint public minimumTokens = 1000;
     uint public maxNumberofDays = 60; 
 
-    mapping(address => uint) credits; //user bid money, save it here
+    struct CreditPerLaunchPad {
+        uint credits;
+        address tokenAddress;
+    }
+
+    mapping(address => CreditPerLaunchPad) userCredits; //user bid money, save it here
 
 
     //MODIFIERS 
@@ -43,6 +52,13 @@ contract LaunchPad {
         require(!isLocked, "Contract is locked by admin");
         _;
     }
+
+    modifier checkWithdrawType(uint _launchpadId) {
+        require(launchpads[_launchpadId].allowUserWithdraw == true, "Please run settleLaunchPad first!");
+        require(launchpads[_launchpadId].creditType != 0, "refund type not set yet!");
+        _;
+    }
+ 
 
     //CONSTRUCTOR
 
@@ -100,7 +116,7 @@ contract LaunchPad {
         launchedTokens[_tokenAddress] = totalLaunchpads;
 
         //We assume msg.sender is developer, if it's not we are fucked up
-        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, _pricePerToken, msg.sender, _tokenAddress);
+        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens ,_totalTokens, _pricePerToken, msg.sender, _tokenAddress, false, false, 0);
 
         //emit event
     }
@@ -132,36 +148,85 @@ contract LaunchPad {
         uint amountToBuy = msg.value * launchpadPricePerToken;
         uint tokensToBuy = amountToBuy / (10 ** 18);
 
+        //instead of revert, we can buy highest available and return funds to user
+        require(launchpads[_launchpadId].totalTokens >= tokensToBuy, "Not enough tokens to buy!");
+
         launchpads[_launchpadId].totalTokens = launchpads[_launchpadId].totalTokens - tokensToBuy;
 
-        //TODO: add credits based on launchPadId
-        credits[msg.sender] += tokensToBuy;
+        //increment credit
+        uint oldCredit = userCredits[msg.sender].credits;
+        uint newCredit = oldCredit + tokensToBuy;
+        userCredits[msg.sender] = CreditPerLaunchPad(newCredit, launchpads[_launchpadId].tokenAddress);
     }
 
     /// AFTER SALES
-    function settleLaunchPad() public isLock {
-        //check percentage
-        //
-        //if not enough percentage
-        //1. send all funds to developer
-        //2. allow user to withdraw ether
+    function settleLaunchPad(uint _launchpadId) public {
+        //developers and user run this to take funds
+        require(_launchpadId <= totalLaunchpads, "Invalid launchpadId");
+        require(launchpads[_launchpadId].paid == false, "This launchpad has been settled");
 
-        //if enough percentage
-        //1. send rest of tokens back to developer
-        //2. allow user withdraw erc20 token
-        //3. send ether to developer
+        //refund to developer
+
+        // BEFORE TIME END
+
+        //if (time)
+
+        //a. no tokens left
+        //send eth to dev
+        //allow user take token
+
+        if (launchpads[_launchpadId].totalTokens == 0){
+            //no need check time because buyLaunchPadToken already checked
+
+            //set funds paid to true
+            launchpads[_launchpadId].paid = true;
+
+            //allow user withdraw token
+            launchpads[_launchpadId].creditType = 2;
+
+            //calculate amount to be sent
+            uint tokenInEth = 1 ether / launchpads[_launchpadId].pricePerToken;
+            uint amount = launchpads[_launchpadId].originalAmountofTokens * tokenInEth;
+
+            //send funds to dev
+            (bool sent, ) = launchpads[_launchpadId].sender.call{value: amount}("");
+            require(sent, "Failed to send Ether");
+        }
+
+        //b. tokens left BUT percentage acceptance not achieved
+        //revert tx
+
+        //c. token left AND percentage acceptance achieved
+        //allow user take token
+
+        // AFTER TIME END
+
+        //if (time ended)
+        //a. percentage acceptance
+        //allow user take token
+        //refund rest of tokens to developer
+        //send eth to dev
+
+        //b. not enough percentage
+        //refund token to dev
+        //allow user take eth
     }
 
     //TODO: must be modified
-    function withdrawCredits() public isLock {
-        //check if launchpad is over acceptancePercentage, if yes allow withdrawal
+    function withdrawCredits(uint _launchPadId) public checkWithdrawType(_launchPadId) {
+        //NOTE: all verifications are done in settleLaunchPad, hence a modifier to prevent bad stuff happen
+        
+        // get launchpads address from struct
+        uint amount = userCredits[msg.sender].credits;
 
-        uint amount = credits[msg.sender];
+        require(_launchPadId <= totalLaunchpads, "Invalid launchpadId");
 
+        //TODO: check credit Type, ie. ETH or token?
+        
         require(amount != 0);
         require(address(this).balance >= amount);
 
-        credits[msg.sender] = 0;
+        userCredits[msg.sender].credits = 0;
 
         (bool sent, ) = msg.sender.call{value: amount}("");
         require(sent, "Failed to send Ether");
