@@ -67,8 +67,11 @@ contract LaunchPad {
     }
 
     /// DEVELOPER DEPOSIT
-
     //TODO: handle allowances = unlimited @lee-min 
+    function giveAllowance(address _tokenAddress) public {
+        ERC20 customToken = ERC20(_tokenAddress);
+        customToken.approve(address(this), 2**256 - 1);
+    }
 
     function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _pricePerToken, uint _totalTokens, address _tokenAddress) public payable isLock {
 
