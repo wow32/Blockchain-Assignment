@@ -80,7 +80,7 @@ truffle compile
 - [x] Price per token
 - [ ] Test cases to make sure everything works as expected
 - [x] Limit to 18 decimals
-- [ ] Map credit to multiple launchpad id
+- [x] Map credit to multiple launchpad id
 - [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
 - [ ] Refactor code for readability
 
