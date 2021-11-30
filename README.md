@@ -4,6 +4,14 @@
 
 [Launchpad.sol](contracts/Launchpad.sol)
 
+## Testing
+1. Create own ERC20 token
+2. Approve contract to spend tokens behalf of you
+3. Run `launchMyToken` function with desired input
+4. User purchase via `buyLaunchPadToken` function
+5. After certain threshold requirements, run `settleLaunchPad`
+6. User run `withdrawCredits`
+
 ## Protocol Fees
 The protocol will take a small percentage of fees from the developers in order to operate the system and eat bread.
 ``` solidity
