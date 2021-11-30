@@ -80,6 +80,7 @@ truffle compile
 2. Use other funds instead of ETH
 3. Dynamic calculation system
 4. Gas optimization
+5. Vesting 
 
 ## TODO:
 - [x] Fee calculations
