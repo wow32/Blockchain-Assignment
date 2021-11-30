@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol"; //we use https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC20 to get decimals()
@@ -26,12 +25,12 @@ contract LaunchPad {
         bool allowUserWithdraw;
         uint creditType; //0: Unset, 1: ETH, 2: Token
     }
-    mapping (uint => LaunchPadInformation) public launchpads;
+    mapping(uint => LaunchPadInformation) public launchpads;
     uint public totalLaunchpads = 0;
-    mapping (address => uint) public launchedTokens;
+    mapping(address => uint) public launchedTokens;
     uint public minNumberofDays = 10;
     uint public minimumTokens = 1000;
-    uint public maxNumberofDays = 60; 
+    uint public maxNumberofDays = 60;
 
     struct CreditPerLaunchPad {
         uint credits;
@@ -58,11 +57,11 @@ contract LaunchPad {
         require(launchpads[_launchpadId].creditType != 0, "refund type not set yet!");
         _;
     }
- 
+
 
     //CONSTRUCTOR
 
-    constructor (bool _isLocked) payable {
+    constructor(bool _isLocked) payable {
         owner = msg.sender;
         isLocked = _isLocked;
     }
@@ -78,7 +77,7 @@ contract LaunchPad {
 
         //verify time logic
         require(_startTime > block.timestamp, "Cannot start in past date");
-        require(_numOfDays >= minNumberofDays, "too short"); 
+        require(_numOfDays >= minNumberofDays, "too short");
         require(_numOfDays <= maxNumberofDays, "Whoops, can't be that long");
         uint _endTimeStamp = block.timestamp + (_numOfDays * 1 days);
         require(_endTimeStamp >= _startTime, "something is really wrong here");
@@ -95,7 +94,7 @@ contract LaunchPad {
 
         //verify fees
         uint protocolFee = calculateFee(_totalTokens);
-        require(msg.value >= protocolFee, "Not enough fees paid"); 
+        require(msg.value >= protocolFee, "Not enough fees paid");
 
         //verify _pricePerToken, limit 1 to 10**18, hence we can only accept 18 decimals contract
         require(_pricePerToken >= 1, "max 1 ether per token");
@@ -106,9 +105,9 @@ contract LaunchPad {
 
         // fund contract with developer custom ERC20 token
         //TODO: address check effect integration
-        ERC20 customToken = ERC20(_tokenAddress); 
+        ERC20 customToken = ERC20(_tokenAddress);
         require(customToken.decimals() == 18, "We only accept 18 decimals tokens");
-        require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance"); 
+        require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance");
         require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
         //increment lauchpad id and update values
@@ -116,19 +115,20 @@ contract LaunchPad {
         launchedTokens[_tokenAddress] = totalLaunchpads;
 
         //We assume msg.sender is developer, if it's not we are fucked up
-        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens ,_totalTokens, _pricePerToken, msg.sender, _tokenAddress, false, false, 0);
+        //TODO: we can probably set to contract owner instead of msg.sender
+        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, _totalTokens, _pricePerToken, msg.sender, _tokenAddress, false, false, 0);
 
         //emit event
     }
 
     //TODO: return all to front-end @lee-min
-    function getLaunchPadInformation(uint _launchPadId) public view returns (address) {
+    function getLaunchPadInformation(uint _launchPadId) public view returns(address) {
         require(totalLaunchpads <= _launchPadId, "that no exist");
         return launchpads[_launchPadId].sender;
     }
 
     //will remove in production
-    function whatTimeNow() public view returns (uint) {
+    function whatTimeNow() public view returns(uint) {
         return block.timestamp;
     }
 
@@ -161,75 +161,115 @@ contract LaunchPad {
 
     /// AFTER SALES
     function settleLaunchPad(uint _launchpadId) public {
+
         //developers and user run this to take funds
         require(_launchpadId <= totalLaunchpads, "Invalid launchpadId");
         require(launchpads[_launchpadId].paid == false, "This launchpad has been settled");
 
-        //refund to developer
-
-        // BEFORE TIME END
-
-        //if (time)
-
-        //a. no tokens left
-        //send eth to dev
-        //allow user take token
-
-        if (launchpads[_launchpadId].totalTokens == 0){
-            //no need check time because buyLaunchPadToken already checked
-
-            //set funds paid to true
-            launchpads[_launchpadId].paid = true;
-
-            //allow user withdraw token
-            launchpads[_launchpadId].creditType = 2;
-
-            //calculate amount to be sent
-            uint tokenInEth = 1 ether / launchpads[_launchpadId].pricePerToken;
-            uint amount = launchpads[_launchpadId].originalAmountofTokens * tokenInEth;
-
-            //send funds to dev
-            (bool sent, ) = launchpads[_launchpadId].sender.call{value: amount}("");
-            require(sent, "Failed to send Ether");
+        //calculate acceptance percentage
+        bool mileStoneAchieved;
+        uint tokensBought = launchpads[_launchpadId].originalAmountofTokens - launchpads[_launchpadId].totalTokens;
+        if (tokensBought >= launchpads[_launchpadId].milestone) {
+            mileStoneAchieved = true;
+        } else {
+            mileStoneAchieved = false;
         }
 
-        //b. tokens left BUT percentage acceptance not achieved
-        //revert tx
+        //check launchpad end
+        bool isLaunchPadEnd;
+        if (block.timestamp >= launchpads[_launchpadId].endTimeStamp) {
+            isLaunchPadEnd = true;
+        } else {
+            isLaunchPadEnd = false;
+        }
 
-        //c. token left AND percentage acceptance achieved
-        //allow user take token
+        //pre launchpad ending time
+        if (!isLaunchPadEnd) {
+            //code would enter this block if launchpad is too popular, ie. tokens are all bought before ending time
+            //user can call this function to start withdraw tokens before ending time, under condition that milestone is achieved
 
-        // AFTER TIME END
+            if (mileStoneAchieved) {
+                //if the tokens are so popular that everyone bought it before ending time, we will close it
+                if (launchpads[_launchpadId].totalTokens == 0) {
+                    successLaunchPad(_launchpadId);
 
-        //if (time ended)
-        //a. percentage acceptance
-        //allow user take token
-        //refund rest of tokens to developer
-        //send eth to dev
+                } else {
+                    //there are still tokens left, so we allow user withdraw first because milestone is achieved
+                    launchpads[_launchpadId].creditType = 2;
+                }
 
-        //b. not enough percentage
-        //refund token to dev
-        //allow user take eth
+            } else {
+                //if milestone is not achieved yet
+                revert("Milestone not achieved yet!");
+            }
+
+        } else if (isLaunchPadEnd) {
+            //post launchpad ending time
+            //only two possibilites, accepted or not
+
+            if (mileStoneAchieved) {
+                //if milestone achieved
+                successLaunchPad(_launchpadId);
+
+            } else if (!mileStoneAchieved) {
+                //if no one buy their token :(
+                failLaunchPad(_launchpadId);
+            }
+        }
+
     }
 
-    //TODO: must be modified
+    function successLaunchPad(uint _launchpadId) internal {
+        //set funds paid to true
+        launchpads[_launchpadId].paid = true;
+
+        //allow user withdraw token
+        launchpads[_launchpadId].creditType = 2;
+
+        //calculate ETH amount to be sent
+        uint tokenInEth = 1 ether / launchpads[_launchpadId].pricePerToken;
+        uint amount = launchpads[_launchpadId].originalAmountofTokens * tokenInEth;
+
+        //send ETH to dev
+        (bool sent, ) = launchpads[_launchpadId].sender.call{value: amount}("");
+        require(sent, "Failed to send Ether");
+    }
+
+    function failLaunchPad(uint _launchpadId) internal {
+        //set funds paid to true
+        launchpads[_launchpadId].paid = true;
+
+        //allow user withdraw eth
+        launchpads[_launchpadId].creditType = 1;
+
+        //calculate token to be sent
+        ERC20 customToken = ERC20(launchpads[_launchpadId].tokenAddress);
+        uint amount = launchpads[_launchpadId].originalAmountofTokens;
+
+        //send token to dev
+        customToken.transferFrom(address(this), launchpads[_launchpadId].sender, amount);
+    }
+
     function withdrawCredits(uint _launchPadId) public checkWithdrawType(_launchPadId) {
         //NOTE: all verifications are done in settleLaunchPad, hence a modifier to prevent bad stuff happen
-        
         // get launchpads address from struct
         uint amount = userCredits[msg.sender].credits;
 
         require(_launchPadId <= totalLaunchpads, "Invalid launchpadId");
-
-        //TODO: check credit Type, ie. ETH or token?
-        
-        require(amount != 0);
-        require(address(this).balance >= amount);
+        require(amount != 0, "nothing to withdraw");
+        require(address(this).balance >= amount, "not enough balance to withdraw");
 
         userCredits[msg.sender].credits = 0;
 
-        (bool sent, ) = msg.sender.call{value: amount}("");
-        require(sent, "Failed to send Ether");
+        if (launchpads[_launchPadId].creditType == 1){
+            //user withdraw ETH
+            (bool sent, ) = msg.sender.call {value: amount}("");
+            require(sent, "Failed to send Ether");
+        } else if ((launchpads[_launchPadId].creditType == 2)){
+            //user withdraw token
+            ERC20 customToken = ERC20(launchpads[_launchPadId].tokenAddress);
+            customToken.transferFrom(address(this), msg.sender, amount);
+        }   
     }
 
     //ADMIN OPERATIONS
@@ -263,7 +303,7 @@ contract LaunchPad {
     }
 
     function changeOwner(address _newOwner) public onlyOwner {
-        //TODO: some checking to verify address
+        require(_newOwner != address(0), "cannot set to null address");
         //TODO: add timelock
         owner = _newOwner;
     }
@@ -273,13 +313,13 @@ contract LaunchPad {
     //add required functions like totalsupply @lee-min
 
     /// Helper functions
-    function calculateFee(uint _totalTokens) public view returns (uint) {
+    function calculateFee(uint _totalTokens) public view returns(uint) {
         uint totalFee = (_totalTokens * fee) / 100; //multiply before divide
         return totalFee * 10 ** 16; // refer to README for calculation
     }
 
-    function calculateAcceptanceRate(uint _totalTokens, uint _acceptedRate) public pure returns (uint) {
-        uint milestone = (_totalTokens * _acceptedRate) / 100; 
+    function calculateAcceptanceRate(uint _totalTokens, uint _acceptedRate) public pure returns(uint) {
+        uint milestone = (_totalTokens * _acceptedRate) / 100;
         return milestone;
     }
 
