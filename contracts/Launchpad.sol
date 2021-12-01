@@ -16,8 +16,8 @@ contract LaunchPad {
         uint endTimeStamp;
         uint acceptancePercentage;
         uint milestone;
-        uint originalAmountofTokens;
-        uint totalTokens;
+        uint originalAmountofTokens; //original deposit 1000?
+        uint totalTokens; //1000 - 100 = 900
         uint pricePerToken;
         address sender;
         address tokenAddress;
@@ -58,19 +58,21 @@ contract LaunchPad {
         _;
     }
 
+    //event
+
+    event DepositToken();
 
     //CONSTRUCTOR
 
-    constructor(bool _isLocked) payable {
+    constructor(bool _isLocked) {
         owner = msg.sender;
         isLocked = _isLocked;
     }
 
     /// DEVELOPER DEPOSIT
-    //TODO: handle allowances = unlimited @lee-min 
     function giveAllowance(address _tokenAddress) public {
         ERC20 customToken = ERC20(_tokenAddress);
-        customToken.approve(address(this), 2**256 - 1);
+        customToken.increaseAllowance(address(this), 2**256 - 1); 
     }
 
     function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _pricePerToken, uint _totalTokens, address _tokenAddress) public payable isLock {
@@ -121,12 +123,7 @@ contract LaunchPad {
         require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
         //emit event
-    }
-
-    //TODO: return all to front-end @lee-min
-    function getLaunchPadInformation(uint _launchPadId) public view returns(address) {
-        require(totalLaunchpads <= _launchPadId, "that no exist");
-        return launchpads[_launchPadId].sender;
+        emit DepositToken();
     }
 
     //will remove in production
@@ -310,9 +307,18 @@ contract LaunchPad {
         owner = _newOwner;
     }
 
-    //add admin remove launchpads
+    //add admin remove launchpads todo
 
-    //add required functions like totalsupply @lee-min
+    // @lee-min add token helpers
+    function retrievePriceForToken(uint _launchPadId) public view returns (uint) {
+        // return ETH price for one token 
+        // get price per token for supplied _launchPadId
+        return 1 ether / launchpads[_launchPadId].pricePerToken;
+    }
+
+    // get max buy value for available tokens
+    function getMaxBuyValueForToken(uint _launchPadId) public {
+    }
 
     /// Helper functions
     function calculateFee(uint _totalTokens) public view returns(uint) {
