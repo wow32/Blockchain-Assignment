@@ -106,13 +106,6 @@ contract LaunchPad {
         //calculate required acceptance tokens
         uint milestoneRequired = calculateAcceptanceRate(_totalTokens, _acceptedPercentage);
 
-        // fund contract with developer custom ERC20 token
-        //TODO: address check effect integration
-        ERC20 customToken = ERC20(_tokenAddress);
-        require(customToken.decimals() == 18, "We only accept 18 decimals tokens");
-        require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance");
-        require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
-
         //increment lauchpad id and update values
         totalLaunchpads += 1;
         launchedTokens[_tokenAddress] = totalLaunchpads;
@@ -120,6 +113,12 @@ contract LaunchPad {
         //We assume msg.sender is developer, if it's not we are fucked up
         //TODO: we can probably set to contract owner instead of msg.sender
         launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, _totalTokens, _pricePerToken, msg.sender, _tokenAddress, false, false, 0);
+
+        // fund contract with developer custom ERC20 token
+        ERC20 customToken = ERC20(_tokenAddress);
+        require(customToken.decimals() == 18, "We only accept 18 decimals tokens");
+        require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance");
+        require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
         //emit event
     }
