@@ -81,6 +81,7 @@ truffle compile
 3. Dynamic calculation system
 4. Gas optimization
 5. Vesting 
+6. Protocol token for platform launch
 
 ## TODO:
 - [x] Fee calculations
@@ -92,6 +93,7 @@ truffle compile
 - [x] Map credit to multiple launchpad id
 - [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
 - [ ] Refactor code for readability
+- [ ] Getters for minimum and maximum price per token
 
 ## References
 1. https://eth-converter.com/
