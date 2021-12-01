@@ -82,6 +82,7 @@ truffle compile
 4. Gas optimization
 5. Vesting 
 6. Protocol token for platform launch
+7. Testnet launch and testing
 
 ## TODO:
 - [x] Fee calculations
