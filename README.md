@@ -95,7 +95,7 @@ truffle compile
 - [x] Map credit to multiple launchpad id
 - [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
 - [ ] Refactor code for readability
-- [ ] Getters for minimum and maximum price per token
+- [x] Getters for minimum and maximum price per token
 
 ## References
 1. https://eth-converter.com/
