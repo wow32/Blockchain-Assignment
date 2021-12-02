@@ -131,6 +131,7 @@ contract LaunchPad {
 
     /// USER OPERATIONS
     function buyLaunchPadToken(uint _launchpadId) public payable isLock {
+        require(msg.sender != launchpads[_launchpadId].sender, "developers cannot buy their own token");
 
         //check launchpad stuff
         require(_launchpadId <= totalLaunchpads, "Invalid launchpadId");
@@ -265,7 +266,7 @@ contract LaunchPad {
         } else if ((launchpads[_launchPadId].creditType == 2)){
             //user withdraw token
             ERC20 customToken = ERC20(launchpads[_launchPadId].tokenAddress);
-            customToken.transferFrom(address(this), msg.sender, amount);
+            require(customToken.transfer(msg.sender, amount), "unable to send money");
         }   
     }
 
