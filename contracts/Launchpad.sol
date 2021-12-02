@@ -245,7 +245,7 @@ contract LaunchPad {
         uint amount = launchpads[_launchpadId].originalAmountofTokens;
 
         //send token to dev
-        customToken.transferFrom(address(this), launchpads[_launchpadId].sender, amount);
+        require(customToken.transfer(launchpads[_launchpadId].sender, amount), "unable to send funds to dev!");
     }
 
     function withdrawCredits(uint _launchPadId) public checkWithdrawType(_launchPadId) {
