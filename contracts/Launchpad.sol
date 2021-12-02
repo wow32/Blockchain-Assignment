@@ -58,7 +58,10 @@ contract LaunchPad {
 
     //event
 
-    event DepositToken();
+    event DepositToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _pricePerToken, uint _totalTokens, address _tokenAddress);
+    event changeMaxDays(uint _numOfDays);
+    event changeMinDays(uint _numOfDays);
+    event changeTokens(uint _minimumTokens);
 
     //CONSTRUCTOR
 
@@ -120,8 +123,7 @@ contract LaunchPad {
         require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance");
         require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
-        //emit event
-        emit DepositToken();
+        emit DepositToken(_startTime, _numOfDays, _acceptedPercentage, _pricePerToken, _totalTokens, _tokenAddress);
     }
 
     //will remove in production
@@ -269,24 +271,27 @@ contract LaunchPad {
             require(customToken.transfer(msg.sender, amount), "unable to send money");
         }   
     }
-
+    
     //ADMIN OPERATIONS
     function changeMaxNumOfDays(uint _numOfDays) public onlyOwner {
         require(_numOfDays >= minNumberofDays, "Supplied days is smaller than minimum number of days");
         maxNumberofDays = _numOfDays;
-        //emit event
-    }
 
+        emit changeMaxDays(maxNumberofDays);
+    }
+    
     function changeMinNumOfDays(uint _numOfDays) public onlyOwner {
         require(_numOfDays <= maxNumberofDays, "Supplied days is bigger than maximum number of days");
         minNumberofDays = _numOfDays;
-        //emit event
-    }
 
+        emit changeMinDays(minNumberofDays);
+    }
+    
     function changeMinimumTokens(uint _minimumTokens) public onlyOwner {
         require(_minimumTokens > 0, "Cannot set as 0");
         minimumTokens = _minimumTokens;
-        //emit event
+        
+        emit changeTokens(minimumTokens);
     }
 
     function lockContract(bool _isLocked) public onlyOwner {
