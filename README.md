@@ -96,6 +96,7 @@ truffle compile
 - [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
 - [ ] Refactor code for readability
 - [x] Getters for minimum and maximum price per token
+- [ ] Finalize README
 
 ## References
 1. https://eth-converter.com/
