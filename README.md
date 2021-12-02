@@ -5,8 +5,8 @@
 [Launchpad.sol](contracts/Launchpad.sol)
 
 ## Testing
-1. Create own ERC20 token
-2. Approve contract to spend tokens behalf of you
+1. Create own ERC20 token and deploy it
+2. Copy the deployed token address and supply it to `giveAllowance`
 3. Run `launchMyToken` function with desired input
 4. User purchase via `buyLaunchPadToken` function
 5. After certain threshold requirements, run `settleLaunchPad`
