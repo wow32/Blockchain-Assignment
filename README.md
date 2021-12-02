@@ -5,12 +5,13 @@
 [Launchpad.sol](contracts/Launchpad.sol)
 
 ## Testing
-1. Create own ERC20 token and deploy it
-2. Copy the deployed token address and supply it to `giveAllowance`
+1. Deploy Launchpad
+1. Deploy custom ERC20 token
+2. Approve or increase allowance for launchpad to spend, [front-end need to handle this](https://ethereum.stackexchange.com/a/112191)
 3. Run `launchMyToken` function with desired input
-4. User purchase via `buyLaunchPadToken` function
-5. After certain threshold requirements, run `settleLaunchPad`
-6. User run `withdrawCredits`
+4. User purchase via `buyLaunchPadToken`, optionally running `retrievePriceForToken` or `getMaxBuyValueForToken` beforehand to estimate price.
+5. Run `settleLaunchPad` to finish the launchpad
+6. User run `withdrawCredits` to withdraw funds, either ETH or custom tokens
 
 ## Protocol Fees
 The protocol will take a small percentage of fees from the developers in order to operate the system and eat bread.
