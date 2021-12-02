@@ -22,7 +22,6 @@ contract LaunchPad {
         address sender;
         address tokenAddress;
         bool paid;
-        bool allowUserWithdraw;
         uint creditType; //0: Unset, 1: ETH, 2: Token
     }
     mapping(uint => LaunchPadInformation) public launchpads;
@@ -53,7 +52,6 @@ contract LaunchPad {
     }
 
     modifier checkWithdrawType(uint _launchpadId) {
-        require(launchpads[_launchpadId].allowUserWithdraw == true, "Please run settleLaunchPad first!");
         require(launchpads[_launchpadId].creditType != 0, "refund type not set yet!");
         _;
     }
@@ -70,18 +68,18 @@ contract LaunchPad {
     }
 
     /// DEVELOPER DEPOSIT
-    function giveAllowance(address _tokenAddress) public {
-        ERC20 customToken = ERC20(_tokenAddress);
-        customToken.increaseAllowance(address(this), 2**256 - 1); 
-    }
 
     function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _pricePerToken, uint _totalTokens, address _tokenAddress) public payable isLock {
 
         // @front-end should handle the conversion from date to Unix timestamp
         // @front-end need to handle price decimal conversion, eg. 1000 = 0.001 ETH
+        // @front-end need to handle approval https://ethereum.stackexchange.com/a/112191
 
         //verify time logic
-        require(_startTime > block.timestamp, "Cannot start in past date");
+        if (_startTime < block.timestamp){
+            //default start now unless specified otherwise
+            _startTime = block.timestamp;
+        }
         require(_numOfDays >= minNumberofDays, "too short");
         require(_numOfDays <= maxNumberofDays, "Whoops, can't be that long");
         uint _endTimeStamp = block.timestamp + (_numOfDays * 1 days);
@@ -112,13 +110,13 @@ contract LaunchPad {
         totalLaunchpads += 1;
         launchedTokens[_tokenAddress] = totalLaunchpads;
 
-        //We assume msg.sender is developer, if it's not we are fucked up
-        //TODO: we can probably set to contract owner instead of msg.sender
-        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, _totalTokens, _pricePerToken, msg.sender, _tokenAddress, false, false, 0);
+        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, _totalTokens, _pricePerToken, msg.sender, _tokenAddress, false, 0);
 
         // fund contract with developer custom ERC20 token
         ERC20 customToken = ERC20(_tokenAddress);
         require(customToken.decimals() == 18, "We only accept 18 decimals tokens");
+        uint balanceOfUser = customToken.balanceOf(msg.sender);
+        require(balanceOfUser >= _totalTokens, "Not enough funds in sender balance!");
         require(customToken.allowance(msg.sender, address(this)) >= _totalTokens, "Insuficient allowance");
         require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
@@ -309,7 +307,6 @@ contract LaunchPad {
 
     //add admin remove launchpads todo
 
-    // @lee-min add token helpers
     function retrievePriceForToken(uint _launchPadId) public view returns (uint) {
         // return ETH price for one token 
         // get price per token for supplied _launchPadId
@@ -317,7 +314,11 @@ contract LaunchPad {
     }
 
     // get max buy value for available tokens
-    function getMaxBuyValueForToken(uint _launchPadId) public {
+    function getMaxBuyValueForToken(uint _launchPadId) public view returns (uint) {
+        uint tokensLeft = launchpads[_launchPadId].totalTokens;
+        require(tokensLeft != 0, "No tokens left to buy!");
+        uint pricePerToken = 1 ether / launchpads[_launchPadId].pricePerToken;
+        return tokensLeft * pricePerToken;
     }
 
     /// Helper functions
@@ -329,6 +330,15 @@ contract LaunchPad {
     function calculateAcceptanceRate(uint _totalTokens, uint _acceptedRate) public pure returns(uint) {
         uint milestone = (_totalTokens * _acceptedRate) / 100;
         return milestone;
+    }
+
+     function estimateProtocolFee(uint _totalTokens) public view returns (uint) {
+        // Formula: totalTokens * protocolFeePercentage * ethUnit
+        uint _protocolFeePercentage = fee; // 1%
+        uint _ethUnit = 10 ** 16; // 0.001 ETH
+        uint feePercentage = (_totalTokens * _protocolFeePercentage) / 100; 
+        uint feeToPaid = feePercentage * _ethUnit;
+        return feeToPaid;
     }
 
 }
