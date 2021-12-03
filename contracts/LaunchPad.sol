@@ -62,6 +62,7 @@ contract LaunchPad {
     event changeMaxDays(uint _numOfDays);
     event changeMinDays(uint _numOfDays);
     event changeTokens(uint _minimumTokens);
+    event succeedLaunchpad(uint developerProfit);
 
     //CONSTRUCTOR
 
@@ -137,7 +138,7 @@ contract LaunchPad {
 
         //check launchpad stuff
         require(_launchpadId <= totalLaunchpads, "Invalid launchpadId");
-        require(block.timestamp > launchpads[_launchpadId].startTimeStamp, "haven't started yet");
+        require(block.timestamp >= launchpads[_launchpadId].startTimeStamp, "haven't started yet");
         require(block.timestamp <= launchpads[_launchpadId].endTimeStamp, "it already ended");
         require(launchpads[_launchpadId].totalTokens > 0, "No tokens left");
 
@@ -233,6 +234,8 @@ contract LaunchPad {
         //send ETH to dev
         (bool sent, ) = launchpads[_launchpadId].sender.call{value: amount}("");
         require(sent, "Failed to send Ether");
+
+        emit succeedLaunchpad(amount);
     }
 
     function failLaunchPad(uint _launchpadId) internal {

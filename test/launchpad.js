@@ -1,10 +1,20 @@
 const LaunchPad = artifacts.require("LaunchPad");
 const MyToken = artifacts.require("MyToken");
+const { expectRevert, time } = require('@openzeppelin/test-helpers');
 
 /*
  * References:
  * https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
  * https://medium.com/oli-systems/test-driven-solidity-with-truffle-e4beaa2bd194
+ * http://trufflesuite.com/docs/truffle/getting-started/running-migrations#available-accounts
+ * https://ethereum.stackexchange.com/questions/64862/migrates-contract-with-specific-account-without-hard-code-address-using-truffle
+ * https://ethereum.stackexchange.com/questions/71203/truffle-wont-run-tests-while-initializing-a-global-contract-instance
+ * https://ethereum.stackexchange.com/questions/34614/return-a-struct-from-a-mapping-in-test-truffle
+ * https://kalis.me/assert-reverts-solidity-smart-contract-test-truffle/
+ * https://stackoverflow.com/a/66350050
+ * https://github.com/OpenZeppelin/openzeppelin-contracts/blob/24a0bc23cfe3fbc76f8f2510b78af1e948ae6651/test/token/ERC20/utils/TokenTimelock.test.js
+ * https://docs.openzeppelin.com/test-helpers/0.5/api#time
+ * https://web3js.readthedocs.io/en/v1.2.11/web3-utils.html#fromwei
  */
 
 contract("MyToken", (accounts) => {
@@ -38,16 +48,19 @@ contract("LaunchPad", (accounts) => {
         token_contract = await MyToken.deployed();
         launchpad_owner = accounts[0];
         token_owner = accounts[1];
+        token_owner_original_balance = await web3.eth.getBalance(token_owner)
+        buyer = accounts[2];
+        sad_user = accounts[3];
     });
 
     it("should deploy contract", async function() {
         await LaunchPad.deployed();
         return assert.isTrue(true);
-    });
+    })
 
     it("should able to give allowance to LaunchPad contract", async() => {
-        await token_contract.increaseAllowance(launchpad_contract.address, 10000);
-        const value = await token_contract.allowance(accounts[0], launchpad_contract.address);
+        await token_contract.increaseAllowance(launchpad_contract.address, 10000, { from: token_owner });
+        const value = await token_contract.allowance(token_owner, launchpad_contract.address);
         assert.equal(value, 10000, "Error: unable to increaseAllowance on Launchpad contract!");
     });
 
@@ -62,4 +75,64 @@ contract("LaunchPad", (accounts) => {
         //protocol fee should be 1 ETH
         assert.equal(value, 10 ** 18, "Error: protocol fee is " + value.toString());
     });
+
+    it("developer should able to launch tokens", async() => {
+        const tokensToLaunch = 1000;
+        // let balance = await web3.eth.getBalance(launchpad_owner);
+        // console.log(balance);
+        const protocolFee = await launchpad_contract.estimateProtocolFee(tokensToLaunch);
+        await launchpad_contract.launchMyToken(1, 30, 60, 1000, tokensToLaunch, token_contract.address, { value: protocolFee, from: token_owner });
+        const value = await launchpad_contract.launchpads.call(1);
+        assert.equal(value.tokenAddress, token_contract.address, "Error: Token address in launchpad is not MyToken.sol!");
+        assert.equal(value.sender, token_owner, "Error: Owner of launchpad is not developer!");
+    });
+
+    it("developer should not able to buy own tokens", async() => {
+        const minimumPrice = await launchpad_contract.retrievePriceForToken(1);
+        await expectRevert(
+            launchpad_contract.buyLaunchPadToken(1, { from: token_owner, value: minimumPrice }),
+            "developers cannot buy their own token"
+        );
+    });
+
+    it("buyer should able to buy all tokens", async() => {
+        const totalFee = await launchpad_contract.getMaxBuyValueForToken(1)
+        const beforeBuy = await launchpad_contract.launchpads.call(1)
+        assert.equal(beforeBuy.tokenAddress, token_contract.address, "Error: Token address in launchpad is not MyToken.sol!")
+            //buyer buy all tokens 
+        await launchpad_contract.buyLaunchPadToken(1, { value: totalFee, from: buyer })
+        const afterBuy = await launchpad_contract.launchpads.call(1)
+        assert.equal(afterBuy.totalTokens, 0, "Error: There are still tokens left!")
+    });
+
+    it("should not able to buy empty tokens", async() => {
+        const minimumPrice = await launchpad_contract.retrievePriceForToken(1)
+        await expectRevert(
+            launchpad_contract.buyLaunchPadToken(1, { from: sad_user, value: minimumPrice }),
+            "No tokens left"
+        )
+    })
+
+    it("should able to settle launchpad with empty tokens", async() => {
+        await launchpad_contract.settleLaunchPad(1, { from: buyer })
+        const value = await launchpad_contract.launchpads.call(1);
+        assert.equal(value.creditType, 2, "Error: Buyer credit type is not set to token")
+    })
+
+    it("calculate profit for developer", async() => {
+        let newBalance = await web3.eth.getBalance(token_owner)
+        const profit = newBalance - token_owner_original_balance;
+        const profitInEth = web3.utils.fromWei(profit.toString(), "ether")
+        console.log("Developer profit: " + profitInEth + " ether")
+    })
+
+    it("buyer should able to withdraw tokens", async() => {
+        const oldTokenBalance = await token_contract.balanceOf(buyer)
+        await launchpad_contract.withdrawCredits(1, { from: buyer })
+        const newTokenBalance = await token_contract.balanceOf(buyer)
+        const difference = newTokenBalance - oldTokenBalance
+        console.log("User received tokens: " + difference)
+        assert.notEqual(oldTokenBalance, newTokenBalance, "Error: user token balance is not changed!")
+    })
+
 });

@@ -38,7 +38,7 @@ Example:
 The above example shows that the developer is required to deposit 0.1 ETH as protocol fees when attempting to launch 1000 tokens to the launchpad set at 1%.
 
 
-## Installation
+## Installation and Truffle testing
 > To develop use Remix IDE directly
 
 #### Clone the GitHub repository
@@ -47,19 +47,24 @@ The above example shows that the developer is required to deposit 0.1 ETH as pro
 git clone https://github.com/wow32/Blockchain-Assignment
 ```
 
-#### Compile the contracts
+#### Compile all contracts
 ```
 truffle compile
 ```
 
-#### Start local development node
+#### Start local development node in new terminal
 ```
 ganache-cli
+```
+#### Install Openzeppelin test helpers
+```
+npm install --save-dev @openzeppelin/test-helpers
 ```
 
 #### Run test files
 ```
 truffle test
+truffle test --show-events 
 ```
 
 ## Work Flow
