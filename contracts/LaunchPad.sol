@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol"; //we use https://docs.op
 contract LaunchPad {
 
     //Admin variables
-    bool isLocked; //lock contract in case shit happens
-    address owner; //owner of this contract
-    uint fee = 1; //fee is 1% by default
+    bool public isLocked; //lock contract in case shit happens
+    address public owner; //owner of this contract
+    uint public fee = 1; //fee is 1% by default
 
     //Launchpad variables
     struct LaunchPadInformation {
