@@ -4,6 +4,10 @@
 
 [LaunchPad.sol](contracts/LaunchPad.sol)
 
+## Test files
+
+[launchpad.js](test/launchpad.js)
+
 ## Testing in Remix IDE
 1. Deploy Launchpad
 1. Deploy custom ERC20 token
