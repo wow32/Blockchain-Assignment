@@ -4,7 +4,7 @@
 
 [Launchpad.sol](contracts/Launchpad.sol)
 
-## Testing
+## Testing in Remix IDE
 1. Deploy Launchpad
 1. Deploy custom ERC20 token
 2. Approve or increase allowance for launchpad to spend, [front-end need to handle this](https://ethereum.stackexchange.com/a/112191)
@@ -50,6 +50,16 @@ git clone https://github.com/wow32/Blockchain-Assignment
 #### Compile the contracts
 ```
 truffle compile
+```
+
+#### Start local development node
+```
+ganache-cli
+```
+
+#### Run test files
+```
+truffle test
 ```
 
 ## Work Flow
