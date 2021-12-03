@@ -2,7 +2,7 @@
 
 ## Contracts
 
-[Launchpad.sol](contracts/Launchpad.sol)
+[LaunchPad.sol](contracts/LaunchPad.sol)
 
 ## Testing in Remix IDE
 1. Deploy Launchpad
