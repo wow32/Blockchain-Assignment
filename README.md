@@ -71,7 +71,7 @@ truffle test
 truffle test --show-events 
 ```
 
-#### Check testing coverage
+#### Check test coverage
 ```
 npm install -g --save-dev solidity-coverage
 truffle run coverage
@@ -113,9 +113,9 @@ truffle run coverage
 ## TODO:
 - [x] Fee calculations
 - [ ] Events should be emitted
-- [ ] Public getters
+- [x] Public getters
 - [x] Price per token
-- [ ] Test cases to make sure everything works as expected
+- [x] Test cases to make sure everything works as expected
 - [x] Limit to 18 decimals
 - [x] Map credit to multiple launchpad id
 - [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
