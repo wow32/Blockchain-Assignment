@@ -1,6 +1,7 @@
 const LaunchPad = artifacts.require("LaunchPad");
 const MyToken = artifacts.require("MyToken");
-const { expectRevert, time } = require('@openzeppelin/test-helpers');
+const EmoToken = artifacts.require("EmoToken");
+const { expectRevert } = require('@openzeppelin/test-helpers');
 // const { assert } = require('console');
 
 /*
@@ -42,6 +43,30 @@ contract("MyToken", (accounts) => {
 
 });
 
+contract("EmoToken", (accounts) => {
+
+    before(async() => {
+        emo_contract = await EmoToken.deployed();
+        emo_owner = accounts[6];
+    });
+
+    it("should deploy contract", async function() {
+        await EmoToken.deployed();
+        return assert.isTrue(true);
+    });
+
+    it("deployer should be accounts[6]", async() => {
+        const value = await emo_contract.admin();
+        assert.equal(value, emo_owner);
+    });
+
+    it("accounts[6] should have 10000 tokens", async() => {
+        const value = await emo_contract.balanceOf(emo_owner);
+        assert.equal(value, 10000 * 10 ** 18, "Error: accounts[6] have tokens of " + value.toString());
+    });
+
+});
+
 contract("LaunchPad", (accounts) => {
 
     before(async() => {
@@ -54,6 +79,8 @@ contract("LaunchPad", (accounts) => {
         sad_user = accounts[3];
         attacker = accounts[4];
         alice = accounts[5];
+        emo_contract = await EmoToken.deployed();
+        emo_owner = accounts[6];
     });
 
     it("should deploy contract", async function() {
@@ -239,5 +266,14 @@ contract("LaunchPad", (accounts) => {
         const admin = await launchpad_contract.owner()
         assert.equal(admin, alice)
     })
+
+    it("developer unable to launch if contract locked", async() => {
+        const tokensToLaunch = 1000;
+        const protocolFee = await launchpad_contract.estimateProtocolFee(tokensToLaunch);
+        await expectRevert(
+            launchpad_contract.launchMyToken(1, 30, 60, 1000, tokensToLaunch, emo_contract.address, { value: protocolFee, from: emo_owner }),
+            "Contract is locked by admin"
+        )
+    });
 
 });

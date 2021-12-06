@@ -5,26 +5,26 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol"; //we use https://docs.op
 
 contract LaunchPad {
 
-    //Admin variables
-    bool public isLocked; //lock contract in case shit happens
+    // Admin operation variables
+    bool public isLocked; //lock contract to prevent new launchpad 
     address public owner; //owner of this contract
     uint public fee = 1; //fee is 1% by default
 
     //Launchpad variables
     struct LaunchPadInformation {
-        uint startTimeStamp;
-        uint endTimeStamp;
-        uint acceptancePercentage;
-        uint milestone;
-        uint originalAmountofTokens; //original deposit 1000?
-        uint totalTokens; //1000 - 100 = 900
-        uint pricePerToken;
-        address sender;
-        address tokenAddress;
-        bool paid;
-        uint creditType; //0: Unset, 1: ETH, 2: Token
+        uint startTimeStamp; //start time of launchpad
+        uint endTimeStamp; //end time of launchpad
+        uint acceptancePercentage; //required percentage for launchpad to valid, eg. 60%
+        uint milestone; //tokens needed accordingly to acceptancePercentage
+        uint originalAmountofTokens; //original amount of tokens, act as a preserve
+        uint totalTokens; //totaltokens of ERC20 token, will decrease per user buy
+        uint pricePerToken; //price per token, eg. 1000 = 0.001 ETH
+        address sender; //developer address, used to send funds or refund
+        address tokenAddress; //ERC20 token address
+        bool paid;//boolean to indicate whether we paid the developer or not
+        uint creditType; //refund amount for users; 0: Unset, 1: ETH, 2: Token
     }
-    mapping(uint => LaunchPadInformation) public launchpads;
+    mapping(uint => LaunchPadInformation) public launchpads; //total launchpads in existence
     uint public totalLaunchpads = 0;
     mapping(address => uint) public launchedTokens;
     uint public minNumberofDays = 10;
@@ -36,22 +36,25 @@ contract LaunchPad {
         address tokenAddress;
     }
 
-    mapping(address => CreditPerLaunchPad) userCredits; //user bid money, save it here
+    mapping(address => CreditPerLaunchPad) userCredits; //user credit to withdraw
 
 
     //MODIFIERS 
 
     modifier onlyOwner() {
+        //prevents unauthorized access
         require(msg.sender == owner, "Only owner can execute");
         _;
     }
 
     modifier isLock() {
+        //lock contract to prevent new launchpad
         require(!isLocked, "Contract is locked by admin");
         _;
     }
 
     modifier checkWithdrawType(uint _launchpadId) {
+        //dynamic modifier to ensure whether user can get their money/tokens 
         require(launchpads[_launchpadId].creditType != 0, "refund type not set yet!");
         _;
     }
@@ -133,7 +136,7 @@ contract LaunchPad {
 
         //check launchpad stuff
         require(_launchpadId <= totalLaunchpads, "Invalid launchpadId");
-        require(block.timestamp >= launchpads[_launchpadId].startTimeStamp, "haven't started yet");
+        require(block.timestamp >= launchpads[_launchpadId].startTimeStamp, "haven't start yet");
         require(block.timestamp <= launchpads[_launchpadId].endTimeStamp, "it already ended");
         require(launchpads[_launchpadId].totalTokens > 0, "No tokens left");
 
@@ -144,7 +147,7 @@ contract LaunchPad {
         uint amountToBuy = msg.value * launchpadPricePerToken;
         uint tokensToBuy = amountToBuy / (10 ** 18);
 
-        //instead of revert, we can buy highest available and return funds to user
+        //in case user sent too much funds to buy all tokens
         require(launchpads[_launchpadId].totalTokens >= tokensToBuy, "Not enough tokens to buy!");
 
         launchpads[_launchpadId].totalTokens = launchpads[_launchpadId].totalTokens - tokensToBuy;
@@ -305,11 +308,10 @@ contract LaunchPad {
 
     function changeOwner(address _newOwner) public onlyOwner {
         require(_newOwner != address(0), "cannot set to null address");
-        //TODO: add timelock
         owner = _newOwner;
     }
 
-    //add admin remove launchpads todo
+    //add admin remove launchpads TODO
 
     function retrievePriceForToken(uint _launchPadId) public view returns (uint) {
         // return ETH price for one token 

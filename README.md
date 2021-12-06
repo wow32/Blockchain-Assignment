@@ -6,7 +6,8 @@
 
 ## Test files
 
-[launchpad.js](test/launchpad.js)
+- [launchpad.js](test/launchpad.js)
+- [timeTravel.js](test/timeTravel.js)
 
 ## Testing in Remix IDE
 1. Deploy Launchpad
