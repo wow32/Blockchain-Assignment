@@ -1,6 +1,7 @@
 const LaunchPad = artifacts.require("LaunchPad");
 const MyToken = artifacts.require("MyToken");
 const { expectRevert, time } = require('@openzeppelin/test-helpers');
+// const { assert } = require('console');
 
 /*
  * References:
@@ -51,6 +52,8 @@ contract("LaunchPad", (accounts) => {
         token_owner_original_balance = await web3.eth.getBalance(token_owner)
         buyer = accounts[2];
         sad_user = accounts[3];
+        attacker = accounts[4];
+        alice = accounts[5];
     });
 
     it("should deploy contract", async function() {
@@ -133,6 +136,108 @@ contract("LaunchPad", (accounts) => {
         const difference = newTokenBalance - oldTokenBalance
         console.log("User received tokens: " + difference)
         assert.notEqual(oldTokenBalance, newTokenBalance, "Error: user token balance is not changed!")
+    })
+
+    it("developer should not able launch same token twice", async() => {
+        const tokensToLaunch = 1000;
+        const protocolFee = await launchpad_contract.estimateProtocolFee(tokensToLaunch);
+        await expectRevert(
+            launchpad_contract.launchMyToken(1, 30, 60, 1000, tokensToLaunch, token_contract.address, { value: protocolFee, from: token_owner }),
+            "This account has an existing launchpad"
+        )
+    });
+
+    it("developer should not able launch less than minimum number of days", async() => {
+        const checkMe = await launchpad_contract.minNumberofDays()
+        const tokensToLaunch = 1000;
+        const protocolFee = await launchpad_contract.estimateProtocolFee(tokensToLaunch);
+        await expectRevert(
+            launchpad_contract.launchMyToken(1, checkMe - 1, 60, 1000, tokensToLaunch, token_contract.address, { value: protocolFee, from: token_owner }),
+            "too short"
+        )
+    });
+
+    it("developer should not able launch less than required minimum tokens", async() => {
+        const checkMe = await launchpad_contract.minimumTokens()
+        const tokensToLaunch = checkMe - 1;
+        const protocolFee = await launchpad_contract.estimateProtocolFee(tokensToLaunch);
+        await expectRevert(
+            launchpad_contract.launchMyToken(1, 30, 60, 1000, tokensToLaunch, token_contract.address, { value: protocolFee, from: token_owner }),
+            "Need more tokens to process"
+        )
+    });
+
+    it("developer should not able launch more than maximum number of days", async() => {
+        const checkMe = await launchpad_contract.maxNumberofDays()
+        const tokensToLaunch = 1000;
+        const protocolFee = await launchpad_contract.estimateProtocolFee(tokensToLaunch);
+        await expectRevert(
+            launchpad_contract.launchMyToken(1, checkMe + 1, 60, 1000, tokensToLaunch, token_contract.address, { value: protocolFee, from: token_owner }),
+            "Whoops, can't be that long"
+        )
+    });
+
+    it("only admin can change maximum number of days", async() => {
+        const checkMe = await launchpad_contract.minNumberofDays()
+        await expectRevert(
+            launchpad_contract.changeMaxNumOfDays(checkMe + 1, { from: attacker }),
+            "Only owner can execute"
+        )
+        await launchpad_contract.changeMaxNumOfDays(checkMe + 1, { from: launchpad_owner })
+        const value = await launchpad_contract.maxNumberofDays()
+        assert.equal(value, checkMe + 1, "Unable to change maximum number of days")
+
+    })
+
+    it("only admin can change minimum number of days", async() => {
+        const checkMe = await launchpad_contract.maxNumberofDays()
+        await expectRevert(
+            launchpad_contract.changeMinNumOfDays(checkMe - 1, { from: attacker }),
+            "Only owner can execute"
+        )
+        await launchpad_contract.changeMinNumOfDays(checkMe - 1, { from: launchpad_owner })
+        const value = await launchpad_contract.minNumberofDays()
+        assert.equal(value, checkMe - 1)
+    })
+
+    it("only admin can change minimum tokens", async() => {
+        await expectRevert(
+            launchpad_contract.changeMinimumTokens(1, { from: attacker }),
+            "Only owner can execute"
+        )
+        await launchpad_contract.changeMinimumTokens(1, { from: launchpad_owner })
+        const value = await launchpad_contract.minimumTokens()
+        assert.equal(value, 1)
+    })
+
+    it("only admin can lock contract", async() => {
+        await expectRevert(
+            launchpad_contract.lockContract(true, { from: attacker }),
+            "Only owner can execute"
+        )
+        await launchpad_contract.lockContract(true, { from: launchpad_owner })
+        const isLock = await launchpad_contract.isLocked()
+        assert.equal(isLock, true)
+    })
+
+    it("only admin can change fee", async() => {
+        await expectRevert(
+            launchpad_contract.changeFee(10, { from: attacker }),
+            "Only owner can execute"
+        )
+        await launchpad_contract.changeFee(10, { from: launchpad_owner })
+        const feeValue = await launchpad_contract.fee()
+        assert.equal(feeValue, 10)
+    })
+
+    it("only admin can change owner", async() => {
+        await expectRevert(
+            launchpad_contract.changeOwner(attacker, { from: attacker }),
+            "Only owner can execute"
+        )
+        await launchpad_contract.changeOwner(alice, { from: launchpad_owner })
+        const admin = await launchpad_contract.owner()
+        assert.equal(admin, alice)
     })
 
 });

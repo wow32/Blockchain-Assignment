@@ -71,6 +71,12 @@ truffle test
 truffle test --show-events 
 ```
 
+#### Check testing coverage
+```
+npm install -g --save-dev solidity-coverage
+truffle run coverage
+```
+
 ## Work Flow
 1. Developer deposit tokens 
 - Handle max capacity
@@ -120,3 +126,4 @@ truffle test --show-events
 ## References
 1. https://eth-converter.com/
 2. https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC20
+3. https://blog.colony.io/code-coverage-for-solidity-eecfa88668c2/

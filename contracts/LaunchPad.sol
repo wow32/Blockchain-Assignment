@@ -42,7 +42,7 @@ contract LaunchPad {
     //MODIFIERS 
 
     modifier onlyOwner() {
-        require(msg.sender == owner);
+        require(msg.sender == owner, "Only owner can execute");
         _;
     }
 
@@ -93,9 +93,6 @@ contract LaunchPad {
         require(_acceptedPercentage >= 50, "Must be over 50% acceptance");
         require(_acceptedPercentage <= 100, "Must be less than 100% acceptance");
 
-        //verify existing launchpad for specifc token address
-        require(launchedTokens[_tokenAddress] == 0, "This account has an existing launchpad");
-
         //verify minimum tokens
         require(_totalTokens >= minimumTokens, "Need more tokens to process");
 
@@ -106,6 +103,9 @@ contract LaunchPad {
         //verify _pricePerToken, limit 1 to 10**18, hence we can only accept 18 decimals contract
         require(_pricePerToken >= 1, "max 1 ether per token");
         require(_pricePerToken <= 1 ether, "you exceeded minimum _pricePerToken");
+
+        //verify existing launchpad for specifc token address
+        require(launchedTokens[_tokenAddress] == 0, "This account has an existing launchpad");
 
         //calculate required acceptance tokens
         uint milestoneRequired = calculateAcceptanceRate(_totalTokens, _acceptedPercentage);
@@ -125,11 +125,6 @@ contract LaunchPad {
         require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
 
         emit DepositToken(_startTime, _numOfDays, _acceptedPercentage, _pricePerToken, _totalTokens, _tokenAddress);
-    }
-
-    //will remove in production
-    function whatTimeNow() public view returns(uint) {
-        return block.timestamp;
     }
 
     /// USER OPERATIONS
