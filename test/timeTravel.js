@@ -158,4 +158,12 @@ contract("LaunchPad", (accounts) => {
         assert.notEqual(oldTokenBalance, newTokenBalance, "Error: user token balance is not changed!")
     })
 
+    it("buyer cannot withdraw more than one time", async() => {
+        //expect fail since already withdrawn
+        await expectRevert(
+            launchpad_contract.withdrawCredits(1, { from: buyer }),
+            "nothing to withdraw"
+        )
+    })
+
 });

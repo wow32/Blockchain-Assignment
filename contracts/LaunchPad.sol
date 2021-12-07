@@ -267,6 +267,7 @@ contract LaunchPad {
         require(address(this).balance >= amount, "not enough balance to withdraw");
 
         userCredits[msg.sender].credits = 0;
+        userCredits[msg.sender].weiSent = 0;
 
         if (launchpads[_launchPadId].creditType == 1){
 
