@@ -71,6 +71,7 @@ contract LaunchPad {
     event changeOwnerAddress(address _newOwner);
     event succeedLaunchpad(uint developerProfit);
     event failedLaunchPad(uint amount);
+    event launchPadRemoved(uint _launchPadId);
 
     //CONSTRUCTOR
 
@@ -346,40 +347,29 @@ contract LaunchPad {
         emit changeOwnerAddress(owner);
     }
 
-    //add admin remove launchpads TODO
-    bool paused;
-    function setPaused(bool _paused, uint _launchpadId) public onlyOwner{
-        require(msg.sender == owner, "You are not the owner");
-        //check launchpad end
-        bool isLaunchPadEnd;
-        if (block.timestamp <= launchpads[_launchpadId].endTimeStamp) {
-            isLaunchPadEnd = true;
-        } else {
-            isLaunchPadEnd = false;
-        }
-
-        //pre launchpad ending time
-        if (isLaunchPadEnd) {
-            if (launchpads[_launchpadId].totalTokens == 0) {
-                paused = true;
-                paused = _paused;
-            } 
-        } else {
-            revert("LaunchPad end already!");
-        }
-        emit setPausedLaunchPad(_paused, _launchpadId);
+    //in case we find any malicious tokens in launchpad, we can prevent user from buying it
+    function removeLaunchPad(uint _launchpadId) public onlyOwner {
+        require(launchpads[_launchpadId].paid == false, "too late");
+        //intentionally jam the tokens so user cannot purchase
+        launchpads[_launchpadId].totalTokens = 0;
+        //set to paid to developer even we did not, reminder: developer is malicious
+        launchpads[_launchpadId].paid = true;
+        //allow user to withdraw their ETH
+        launchpads[_launchpadId].creditType = 1;
+        emit launchPadRemoved(_launchpadId);
     }
-    event setPausedLaunchPad(bool _paused, uint _launchpadId);
 
-    function withdrawAllMoney(address payable _tokenContract, uint _launchpadId) public onlyOwner{
-        require(owner == msg.sender, "You cannot withdraw.");
-        require(paused == false, "Contract Paused");
-        launchpads[_launchpadId].paid=true;
-        _tokenContract.transfer(address(this).balance);
-        emit WithdrewTokens(_tokenContract);
+    //milestone achieved, paid developer, tokens are left in contract, hence we withdraw it
+    function retrieveAdditionalTokens(uint _launchpadId) public onlyOwner {
+        require(launchpads[_launchpadId].paid, "developer not paid yet!");
+        //if the developer is paid, we can safely withdraw additional tokens
+        ERC20 customToken = ERC20(launchpads[_launchpadId].tokenAddress);
+        //verify there are tokens to withdraw
+        require(customToken.balanceOf(address(this)) > 0, "No tokens to withdraw!");
+        //transfer to contract owner
+        require(customToken.transfer(owner, customToken.balanceOf(address(this))), "unable to send funds to dev!");
     }
-    event WithdrewTokens(address _tokenContract);
-
+    
     function retrievePriceForToken(uint _launchPadId) public view returns (uint) {
         // return ETH price for one token 
         // get price per token for supplied _launchPadId

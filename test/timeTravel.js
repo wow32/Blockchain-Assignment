@@ -3,6 +3,7 @@ const MyToken = artifacts.require("MyToken");
 const EmoToken = artifacts.require("EmoToken");
 const { expectRevert, time } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
+
 /*
  * https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.0.0-beta.0/test/token/ERC20/utils/TokenTimelock.test.js
  */
@@ -221,6 +222,20 @@ contract("LaunchPad", (accounts) => {
             launchpad_contract.withdrawCredits(1, { from: buyer }),
             "nothing to withdraw"
         )
+    })
+
+    it("owner should able withdraw additional tokens", async() => {
+        // const balance = await token_contract.balanceOf(launchpad_contract.address)
+        // console.log(balance)
+
+        await launchpad_contract.retrieveAdditionalTokens(2, { from: launchpad_owner })
+
+        //verify that owner indeed have additional tokens
+        const value = await launchpad_contract.launchpads.call(2);
+        const shouldHave = value.totalTokens
+
+        const balanceInContract = await token_contract.balanceOf(launchpad_owner)
+        expect(shouldHave).to.eql(balanceInContract)
     })
 
 });

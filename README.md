@@ -9,6 +9,14 @@
 - [launchpad.js](test/launchpad.js)
 - [timeTravel.js](test/timeTravel.js)
 
+## Coverage report
+
+- [LaunchPad coverage report](coverage/contracts/LaunchPad.sol.html)
+
+#### Example coverage report
+![](coverage_report.png)
+
+
 ## Testing in Remix IDE
 1. Deploy Launchpad
 1. Deploy custom ERC20 token
@@ -78,26 +86,26 @@ npm install -g --save-dev solidity-coverage
 truffle run coverage
 ```
 
-## Work Flow
+## Work Flow (legacy)
 1. Developer deposit tokens 
 - Handle max capacity
 - Handle time to start and end
 - Percentage of acceptance (eg. 60%)
 
-2. User participate in crowdsale
+2. User participate in crowd sale
 - Record user purchase in credits
 - Check if sale already started and ended already
 - Only accept ETH
 
 3. After sales
-- check percentage, if not satisfy send tokens back to developer 
-- pull over push method to let user withdraw
-- refund left crypto to developer (if have)
+- Check percentage, if not satisfy send tokens back to developer 
+- Pull over push method to let user withdraw
+- Refund left crypto to developer (if have)
 
 4. Admin functions
-- withdraw all funds
-- lock contract 
-- update admin (timelock?)
+- Withdraw all funds
+- Lock contract 
+- Update admin 
 
 5. Front end design
 - web3 js integration
@@ -113,14 +121,13 @@ truffle run coverage
 
 ## TODO:
 - [x] Fee calculations
-- [ ] Events should be emitted
+- [x] Events should be emitted
 - [x] Public getters
 - [x] Price per token
 - [x] Test cases to make sure everything works as expected
 - [x] Limit to 18 decimals
 - [x] Map credit to multiple launchpad id
-- [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
-- [ ] Refactor code for readability
+- [x] Refactor code for readability
 - [x] Getters for minimum and maximum price per token
 - [ ] Testnet deployment and testing
 - [ ] Contract verification

@@ -2,7 +2,6 @@ const LaunchPad = artifacts.require("LaunchPad");
 const MyToken = artifacts.require("MyToken");
 const EmoToken = artifacts.require("EmoToken");
 const { expectRevert } = require('@openzeppelin/test-helpers');
-// const { assert } = require('console');
 
 /*
  * References:
@@ -274,6 +273,60 @@ contract("LaunchPad", (accounts) => {
             launchpad_contract.launchMyToken(1, 30, 60, 1000, tokensToLaunch, emo_contract.address, { value: protocolFee, from: emo_owner }),
             "Contract is locked by admin"
         )
+        await launchpad_contract.lockContract(false, { from: alice })
     });
+
+    it("owner can remove malicious launchpad", async() => {
+        //clean up
+        const checkMe = await launchpad_contract.maxNumberofDays()
+
+        //create new launchpad because duplicate launchpads are not allowed
+        await emo_contract.increaseAllowance(launchpad_contract.address, 10000, { from: emo_owner });
+        const protocolFee = await launchpad_contract.estimateProtocolFee(1000);
+        await launchpad_contract.launchMyToken(1, checkMe - 1, 60, 1000, 1000, emo_contract.address, { value: protocolFee, from: emo_owner });
+
+        //user buy
+        const minimumPrice = await launchpad_contract.retrievePriceForToken(1);
+        launchpad_contract.buyLaunchPadToken(2, { from: buyer, value: minimumPrice })
+
+        //remove launchpad
+        await launchpad_contract.removeLaunchPad(2, { from: alice });
+
+        //verify
+        const value = await launchpad_contract.launchpads.call(2);
+        assert.equal(value.totalTokens, 0)
+        assert.equal(value.paid, true)
+        assert.equal(value.creditType, 1)
+    });
+
+    it("user able to get their refund from malicious token", async() => {
+        //record user old balance
+        const oldTokenBalance = await web3.eth.getBalance(buyer)
+
+        //buyer withdraw ETH
+        await launchpad_contract.withdrawCredits(2, { from: buyer })
+
+        //record new user balance
+        const newTokenBalance = await web3.eth.getBalance(buyer)
+
+        //logging
+        console.log("User old balance: " + web3.utils.fromWei(oldTokenBalance.toString(), "ether"))
+        console.log("User new balance: " + web3.utils.fromWei(newTokenBalance.toString(), "ether"))
+    })
+
+    it("developer cannot settle launchpad", async() => {
+        await expectRevert(
+            launchpad_contract.settleLaunchPad(2, { from: emo_owner }),
+            "This launchpad has been settled"
+        )
+    })
+
+    it("buyer unable to buy malicious token after removed by admin", async() => {
+        const minimumPrice = await launchpad_contract.retrievePriceForToken(1);
+        await expectRevert(
+            launchpad_contract.buyLaunchPadToken(2, { from: buyer, value: minimumPrice }),
+            "No tokens left"
+        )
+    })
 
 });

@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/LaunchPad.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> LaunchPad.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>139/139</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">70.54% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>79/112</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>23/23</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>139/139</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34×</span>
+<span class="cline-any cline-yes">32×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
+&nbsp;
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol"; //we use https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC20 to get decimals()
+&nbsp;
+contract LaunchPad {
+&nbsp;
+    // Admin operation variables
+    bool public isLocked; //lock contract to prevent new launchpad 
+    address public owner; //owner of this contract
+    uint public fee = 1; //fee is 1% by default
+&nbsp;
+    //Launchpad variables
+    struct LaunchPadInformation {
+        uint startTimeStamp; //start time of launchpad
+        uint endTimeStamp; //end time of launchpad
+        uint acceptancePercentage; //required percentage for launchpad to valid, eg. 60%
+        uint milestone; //tokens needed accordingly to acceptancePercentage
+        uint originalAmountofTokens; //original amount of tokens, act as a preserve
+        uint totalTokens; //totaltokens of ERC20 token, will decrease per user buy
+        uint pricePerToken; //price per token, eg. 1000 = 0.001 ETH
+        address sender; //developer address, used to send funds or refund
+        address tokenAddress; //ERC20 token address
+        bool paid;//boolean to indicate whether we paid the developer or not
+        uint creditType; //refund amount for users; 0: Unset, 1: ETH, 2: Token
+    }
+    mapping(uint =&gt; LaunchPadInformation) public launchpads; //total launchpads in existence
+    uint public totalLaunchpads = 0;
+    mapping(address =&gt; uint) public launchedTokens;
+    uint public minNumberofDays = 10;
+    uint public minimumTokens = 1000;
+    uint public maxNumberofDays = 60;
+&nbsp;
+    struct CreditPerLaunchPad {
+        uint credits;
+        address tokenAddress;
+        uint weiSent;
+    }
+&nbsp;
+    mapping(address =&gt; CreditPerLaunchPad) public userCredits; //user credit to withdraw
+&nbsp;
+&nbsp;
+    //MODIFIERS 
+&nbsp;
+    modifier onlyOwner() {
+        //prevents unauthorized access
+        require(msg.sender == owner, "Only owner can execute");
+        _;
+    }
+&nbsp;
+    modifier isLock() {
+        //lock contract to prevent new launchpad
+        require(!isLocked, "Contract is locked by admin");
+        _;
+    }
+&nbsp;
+    modifier checkWithdrawType(uint _launchpadId) {
+        //dynamic modifier to ensure whether user can get their money/tokens 
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(launchpads[_launchpadId].creditType != 0, "refund type not set yet!");
+        _;
+    }
+&nbsp;
+    //event
+&nbsp;
+    event DepositToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _pricePerToken, uint _totalTokens, address _tokenAddress);
+    event changeMaxDays(uint _numOfDays);
+    event changeMinDays(uint _numOfDays);
+    event changeTokens(uint _minimumTokens);
+    event lock(bool isLocked);
+    event changeFeeRate(uint _fee);
+    event changeOwnerAddress(address _newOwner);
+    event succeedLaunchpad(uint developerProfit);
+    event failedLaunchPad(uint amount);
+    event launchPadRemoved(uint _launchPadId);
+&nbsp;
+    //CONSTRUCTOR
+&nbsp;
+    constructor(bool _isLocked) {
+        owner = msg.sender;
+        isLocked = _isLocked;
+    }
+&nbsp;
+    /// DEVELOPER DEPOSIT
+&nbsp;
+    function launchMyToken(uint256 _startTime, uint256 _numOfDays, uint _acceptedPercentage, uint _pricePerToken, uint _totalTokens, address _tokenAddress) public payable isLock {
+&nbsp;
+        // @front-end should handle the conversion from date to Unix timestamp
+        // @front-end need to handle price decimal conversion, eg. 1000 = 0.001 ETH
+        // @front-end need to handle approval https://ethereum.stackexchange.com/a/112191
+&nbsp;
+        //verify time logic
+        if (_startTime &lt; block.timestamp){
+            //default start now unless specified otherwise
+            _startTime = block.timestamp;
+        }
+        require(_numOfDays &gt;= minNumberofDays, "too short");
+        require(_numOfDays &lt;= maxNumberofDays, "Whoops, can't be that long");
+        uint _endTimeStamp = block.timestamp + (_numOfDays * 1 days);
+        require(_endTimeStamp &gt;= _startTime, "something is really wrong here");
+&nbsp;
+        //verify percentage rate
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_acceptedPercentage &gt;= 50, "Must be over 50% acceptance");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_acceptedPercentage &lt;= 100, "Must be less than 100% acceptance");
+&nbsp;
+        //verify minimum tokens
+        require(_totalTokens &gt;= minimumTokens, "Need more tokens to process");
+&nbsp;
+        //verify fees
+        uint protocolFee = calculateFee(_totalTokens);
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(msg.value &gt;= protocolFee, "Not enough fees paid");
+&nbsp;
+        //verify _pricePerToken, limit 1 to 10**18, hence we can only accept 18 decimals contract
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_pricePerToken &gt;= 1, "max 1 ether per token");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_pricePerToken &lt;= 1 ether, "you exceeded minimum _pricePerToken");
+&nbsp;
+        //verify existing launchpad for specifc token address
+        require(launchedTokens[_tokenAddress] == 0, "This account has an existing launchpad");
+&nbsp;
+        //calculate required acceptance tokens
+        uint milestoneRequired = calculateAcceptanceRate(_totalTokens, _acceptedPercentage);
+&nbsp;
+        //increment lauchpad id and update values
+        totalLaunchpads += 1;
+        launchedTokens[_tokenAddress] = totalLaunchpads;
+&nbsp;
+        launchpads[totalLaunchpads] = LaunchPadInformation(_startTime, _endTimeStamp, _acceptedPercentage, milestoneRequired, _totalTokens, _totalTokens, _pricePerToken, msg.sender, _tokenAddress, false, 0);
+&nbsp;
+        // fund contract with developer custom ERC20 token
+        ERC20 customToken = ERC20(_tokenAddress);
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(customToken.decimals() == 18, "We only accept 18 decimals tokens");
+        uint balanceOfUser = customToken.balanceOf(msg.sender);
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(balanceOfUser &gt;= _totalTokens, "Not enough funds in sender balance!");
+        require(customToken.allowance(msg.sender, address(this)) &gt;= _totalTokens, "Insuficient allowance");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(customToken.transferFrom(msg.sender, address(this), _totalTokens), "Transfer failed");
+&nbsp;
+        emit DepositToken(_startTime, _numOfDays, _acceptedPercentage, _pricePerToken, _totalTokens, _tokenAddress);
+    }
+&nbsp;
+    /// USER OPERATIONS
+    function buyLaunchPadToken(uint _launchpadId) public payable isLock {
+        require(msg.sender != launchpads[_launchpadId].sender, "developers cannot buy their own token");
+&nbsp;
+        //check launchpad stuff
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_launchpadId &lt;= totalLaunchpads, "Invalid launchpadId");
+        require(block.timestamp &gt;= launchpads[_launchpadId].startTimeStamp, "haven't start yet");
+        require(block.timestamp &lt;= launchpads[_launchpadId].endTimeStamp, "it already ended");
+        require(launchpads[_launchpadId].totalTokens &gt; 0, "No tokens left");
+&nbsp;
+        //calculation price stuffs
+        uint launchpadPricePerToken = launchpads[_launchpadId].pricePerToken;
+        uint minimumFunds = 1 ether / launchpadPricePerToken;
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(msg.value &gt;= minimumFunds, "Sent funds not enough to buy tokens!");
+        uint amountToBuy = msg.value * launchpadPricePerToken;
+        uint tokensToBuy = amountToBuy / (10 ** 18);
+&nbsp;
+        //in case user sent too much funds to buy all tokens
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(launchpads[_launchpadId].totalTokens &gt;= tokensToBuy, "Not enough tokens to buy!");
+&nbsp;
+        launchpads[_launchpadId].totalTokens = launchpads[_launchpadId].totalTokens - tokensToBuy;
+&nbsp;
+        //increment credit
+        uint oldCredit = userCredits[msg.sender].credits;
+        uint newCredit = oldCredit + tokensToBuy;
+&nbsp;
+        //increment wei sent
+        uint oldweiSent = userCredits[msg.sender].weiSent;
+        uint _weiSent = oldweiSent + msg.value;
+&nbsp;
+        userCredits[msg.sender] = CreditPerLaunchPad(newCredit, launchpads[_launchpadId].tokenAddress, _weiSent);
+    }
+&nbsp;
+    /// AFTER SALES
+    function settleLaunchPad(uint _launchpadId) public {
+&nbsp;
+        //developers and user run this to take funds
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_launchpadId &lt;= totalLaunchpads, "Invalid launchpadId");
+        require(launchpads[_launchpadId].paid == false, "This launchpad has been settled");
+&nbsp;
+        //calculate acceptance percentage
+        bool mileStoneAchieved;
+        uint tokensBought = launchpads[_launchpadId].originalAmountofTokens - launchpads[_launchpadId].totalTokens;
+        if (tokensBought &gt;= launchpads[_launchpadId].milestone) {
+            mileStoneAchieved = true;
+        } else {
+            mileStoneAchieved = false;
+        }
+&nbsp;
+        //check launchpad end
+        bool isLaunchPadEnd;
+        if (block.timestamp &gt;= launchpads[_launchpadId].endTimeStamp) {
+            isLaunchPadEnd = true;
+        } else {
+            isLaunchPadEnd = false;
+        }
+&nbsp;
+        //pre launchpad ending time
+        if (!isLaunchPadEnd) {
+            //code would enter this block if launchpad is too popular, ie. tokens are all bought before ending time
+            //user can call this function to start withdraw tokens before ending time, under condition that milestone is achieved
+&nbsp;
+            if (mileStoneAchieved) {
+                //if the tokens are so popular that everyone bought it before ending time, we will close it
+                if (launchpads[_launchpadId].totalTokens == 0) {
+                    successLaunchPad(_launchpadId);
+&nbsp;
+                } else {
+                    //there are still tokens left, so we allow user withdraw first because milestone is achieved
+                    launchpads[_launchpadId].creditType = 2;
+                }
+&nbsp;
+            } else {
+                //if milestone is not achieved yet
+                revert("Milestone not achieved yet!");
+            }
+&nbsp;
+        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (isLaunchPadEnd) {
+            //post launchpad ending time
+            //only two possibilites, accepted or not
+&nbsp;
+            if (mileStoneAchieved) {
+                //if milestone achieved
+                successLaunchPad(_launchpadId);
+&nbsp;
+            } else <span class="missing-if-branch" title="else path not taken" >E</span>if (!mileStoneAchieved) {
+                //if no one buy their token :(
+                failLaunchPad(_launchpadId);
+            }
+        }
+&nbsp;
+    }
+&nbsp;
+    function successLaunchPad(uint _launchpadId) internal {
+        //set funds paid to true
+        launchpads[_launchpadId].paid = true;
+&nbsp;
+        //allow user withdraw token
+        launchpads[_launchpadId].creditType = 2;
+&nbsp;
+        //calculate ETH amount to be sent
+        uint tokenInEth = 1 ether / launchpads[_launchpadId].pricePerToken;
+&nbsp;
+        uint amount;
+&nbsp;
+        
+        if (launchpads[_launchpadId].totalTokens &gt; 0){
+&nbsp;
+            //milestone achieved but not all tokens are bought
+            uint tokensBought = launchpads[_launchpadId].originalAmountofTokens - launchpads[_launchpadId].totalTokens;
+            amount = tokensBought * tokenInEth; //unbought tokens are left in contract
+&nbsp;
+        } else {
+&nbsp;
+            //no tokens left
+             amount = launchpads[_launchpadId].originalAmountofTokens * tokenInEth;
+&nbsp;
+        }
+&nbsp;
+        //send ETH to dev
+        (bool sent, ) = launchpads[_launchpadId].sender.call{value: amount}("");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(sent, "Fail to send ether");
+&nbsp;
+        emit succeedLaunchpad(amount);
+    }
+&nbsp;
+    function failLaunchPad(uint _launchpadId) internal {
+        //set funds paid to true
+        launchpads[_launchpadId].paid = true;
+&nbsp;
+        //allow user withdraw eth
+        launchpads[_launchpadId].creditType = 1;
+&nbsp;
+        //calculate token to be sent
+        ERC20 customToken = ERC20(launchpads[_launchpadId].tokenAddress);
+        uint amount = launchpads[_launchpadId].originalAmountofTokens;
+&nbsp;
+        //send token to dev
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(customToken.transfer(launchpads[_launchpadId].sender, amount), "unable to send funds to dev!");
+        
+        emit failedLaunchPad(amount);
+    }
+&nbsp;
+    function withdrawCredits(uint _launchPadId) public checkWithdrawType(_launchPadId) {
+        //NOTE: all verifications are done in settleLaunchPad, hence a modifier to prevent bad stuff happen
+        // get launchpads address from struct
+        uint amount = userCredits[msg.sender].credits;
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_launchPadId &lt;= totalLaunchpads, "Invalid launchpadId");
+        require(amount != 0, "nothing to withdraw");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(address(this).balance &gt;= amount, "not enough balance to withdraw");
+&nbsp;
+        userCredits[msg.sender].credits = 0;
+        userCredits[msg.sender].weiSent = 0;
+&nbsp;
+        if (launchpads[_launchPadId].creditType == 1){
+&nbsp;
+            //user withdraw ETH
+            (bool sent, ) = msg.sender.call {value: userCredits[msg.sender].weiSent}("");
+            <span class="missing-if-branch" title="else path not taken" >E</span>require(sent, "Failed to send Ether");
+&nbsp;
+        } else <span class="missing-if-branch" title="else path not taken" >E</span>if ((launchpads[_launchPadId].creditType == 2)){
+&nbsp;
+            //user withdraw token
+            ERC20 customToken = ERC20(launchpads[_launchPadId].tokenAddress);
+            <span class="missing-if-branch" title="else path not taken" >E</span>require(customToken.transfer(msg.sender, amount), "unable to send money");
+&nbsp;
+        }   
+    }
+    
+    //ADMIN OPERATIONS
+    function changeMaxNumOfDays(uint _numOfDays) public onlyOwner {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_numOfDays &gt;= minNumberofDays, "Supplied days is smaller than minimum number of days");
+        maxNumberofDays = _numOfDays;
+&nbsp;
+        emit changeMaxDays(maxNumberofDays);
+    }
+    
+    function changeMinNumOfDays(uint _numOfDays) public onlyOwner {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_numOfDays &lt;= maxNumberofDays, "Supplied days is bigger than maximum number of days");
+        minNumberofDays = _numOfDays;
+&nbsp;
+        emit changeMinDays(minNumberofDays);
+    }
+    
+    function changeMinimumTokens(uint _minimumTokens) public onlyOwner {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_minimumTokens &gt; 0, "Cannot set as 0");
+        minimumTokens = _minimumTokens;
+        
+        emit changeTokens(minimumTokens);
+    }
+&nbsp;
+    function lockContract(bool _isLocked) public onlyOwner {
+        isLocked = _isLocked;
+        emit lock(_isLocked);
+    }
+&nbsp;
+    function changeFee(uint _fee) public onlyOwner {
+        //check fee rate range from 0%-100%
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_fee &gt; 0, "Fee must be larger than 0%");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_fee &lt; 100, "Fee must be lower than 100%");
+        fee = _fee;
+        emit changeFeeRate(fee);
+    }
+&nbsp;
+    function changeOwner(address _newOwner) public onlyOwner {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_newOwner != address(0), "cannot set to null address");
+        owner = _newOwner;
+        emit changeOwnerAddress(owner);
+    }
+&nbsp;
+    //in case we find any malicious tokens in launchpad, we can prevent user from buying it
+    function removeLaunchPad(uint _launchpadId) public onlyOwner {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(launchpads[_launchpadId].paid == false, "too late");
+        //intentionally jam the tokens so user cannot purchase
+        launchpads[_launchpadId].totalTokens = 0;
+        //set to paid to developer even we did not, reminder: developer is malicious
+        launchpads[_launchpadId].paid = true;
+        //allow user to withdraw their ETH
+        launchpads[_launchpadId].creditType = 1;
+        emit launchPadRemoved(_launchpadId);
+    }
+&nbsp;
+    //milestone achieved, paid developer, tokens are left in contract, hence we withdraw it
+    function retrieveAdditionalTokens(uint _launchpadId) public onlyOwner {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(launchpads[_launchpadId].paid, "developer not paid yet!");
+        //if the developer is paid, we can safely withdraw additional tokens
+        ERC20 customToken = ERC20(launchpads[_launchpadId].tokenAddress);
+        //verify there are tokens to withdraw
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(customToken.balanceOf(address(this)) &gt; 0, "No tokens to withdraw!");
+        //transfer to contract owner
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(customToken.transfer(owner, customToken.balanceOf(address(this))), "unable to send funds to dev!");
+    }
+    
+    function retrievePriceForToken(uint _launchPadId) public view returns (uint) {
+        // return ETH price for one token 
+        // get price per token for supplied _launchPadId
+        return 1 ether / launchpads[_launchPadId].pricePerToken;
+    }
+&nbsp;
+    // get max buy value for available tokens
+    function getMaxBuyValueForToken(uint _launchPadId) public view returns (uint) {
+        uint tokensLeft = launchpads[_launchPadId].totalTokens;
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(tokensLeft != 0, "No tokens left to buy!");
+        uint pricePerToken = 1 ether / launchpads[_launchPadId].pricePerToken;
+        return tokensLeft * pricePerToken;
+    }
+&nbsp;
+    /// Helper functions
+    function calculateFee(uint _totalTokens) public view returns(uint) {
+        uint totalFee = (_totalTokens * fee) / 100; //multiply before divide
+        return totalFee * 10 ** 16; // refer to README for calculation
+    }
+&nbsp;
+    function calculateAcceptanceRate(uint _totalTokens, uint _acceptedRate) public pure returns(uint) {
+        uint milestone = (_totalTokens * _acceptedRate) / 100;
+        return milestone;
+    }
+&nbsp;
+     function estimateProtocolFee(uint _totalTokens) public view returns (uint) {
+        // Formula: totalTokens * protocolFeePercentage * ethUnit
+        uint _protocolFeePercentage = fee; // 1%
+        uint _ethUnit = 10 ** 16; // 0.001 ETH
+        uint feePercentage = (_totalTokens * _protocolFeePercentage) / 100; 
+        uint feeToPaid = feePercentage * _ethUnit;
+        return feeToPaid;
+    }
+&nbsp;
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 07 2021 15:40:40 GMT+0800 (Malaysia Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
