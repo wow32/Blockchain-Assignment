@@ -66,7 +66,11 @@ contract LaunchPad {
     event changeMaxDays(uint _numOfDays);
     event changeMinDays(uint _numOfDays);
     event changeTokens(uint _minimumTokens);
+    event lock(bool isLocked);
+    event changeFeeRate(uint _fee);
+    event changeOwnerAddress(address _newOwner);
     event succeedLaunchpad(uint developerProfit);
+    event failedLaunchPad(uint amount);
 
     //CONSTRUCTOR
 
@@ -270,6 +274,8 @@ contract LaunchPad {
 
         //send token to dev
         require(customToken.transfer(launchpads[_launchpadId].sender, amount), "unable to send funds to dev!");
+        
+        emit failedLaunchPad(amount);
     }
 
     function withdrawCredits(uint _launchPadId) public checkWithdrawType(_launchPadId) {
@@ -323,6 +329,7 @@ contract LaunchPad {
 
     function lockContract(bool _isLocked) public onlyOwner {
         isLocked = _isLocked;
+        emit lock(_isLocked);
     }
 
     function changeFee(uint _fee) public onlyOwner {
@@ -330,14 +337,48 @@ contract LaunchPad {
         require(_fee > 0, "Fee must be larger than 0%");
         require(_fee < 100, "Fee must be lower than 100%");
         fee = _fee;
+        emit changeFeeRate(fee);
     }
 
     function changeOwner(address _newOwner) public onlyOwner {
         require(_newOwner != address(0), "cannot set to null address");
         owner = _newOwner;
+        emit changeOwnerAddress(owner);
     }
 
     //add admin remove launchpads TODO
+    bool paused;
+    function setPaused(bool _paused, uint _launchpadId) public onlyOwner{
+        require(msg.sender == owner, "You are not the owner");
+        //check launchpad end
+        bool isLaunchPadEnd;
+        if (block.timestamp <= launchpads[_launchpadId].endTimeStamp) {
+            isLaunchPadEnd = true;
+        } else {
+            isLaunchPadEnd = false;
+        }
+
+        //pre launchpad ending time
+        if (isLaunchPadEnd) {
+            if (launchpads[_launchpadId].totalTokens == 0) {
+                paused = true;
+                paused = _paused;
+            } 
+        } else {
+            revert("LaunchPad end already!");
+        }
+        emit setPausedLaunchPad(_paused, _launchpadId);
+    }
+    event setPausedLaunchPad(bool _paused, uint _launchpadId);
+
+    function withdrawAllMoney(address payable _tokenContract, uint _launchpadId) public onlyOwner{
+        require(owner == msg.sender, "You cannot withdraw.");
+        require(paused == false, "Contract Paused");
+        launchpads[_launchpadId].paid=true;
+        _tokenContract.transfer(address(this).balance);
+        emit WithdrewTokens(_tokenContract);
+    }
+    event WithdrewTokens(address _tokenContract);
 
     function retrievePriceForToken(uint _launchPadId) public view returns (uint) {
         // return ETH price for one token 
