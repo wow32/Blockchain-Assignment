@@ -109,7 +109,7 @@ truffle run coverage
 4. Gas optimization
 5. Vesting 
 6. Protocol token for platform launch
-7. Testnet launch and testing
+7. Use Solidity's latest compiler feature (eg. custom error)
 
 ## TODO:
 - [x] Fee calculations
@@ -122,6 +122,8 @@ truffle run coverage
 - [ ] Write [NatSpec](https://docs.soliditylang.org/en/v0.8.10/natspec-format.html) comments
 - [ ] Refactor code for readability
 - [x] Getters for minimum and maximum price per token
+- [ ] Testnet deployment and testing
+- [ ] Contract verification
 - [ ] Finalize README
 
 ## References

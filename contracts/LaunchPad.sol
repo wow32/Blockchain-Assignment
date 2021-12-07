@@ -34,9 +34,10 @@ contract LaunchPad {
     struct CreditPerLaunchPad {
         uint credits;
         address tokenAddress;
+        uint weiSent;
     }
 
-    mapping(address => CreditPerLaunchPad) userCredits; //user credit to withdraw
+    mapping(address => CreditPerLaunchPad) public userCredits; //user credit to withdraw
 
 
     //MODIFIERS 
@@ -155,7 +156,12 @@ contract LaunchPad {
         //increment credit
         uint oldCredit = userCredits[msg.sender].credits;
         uint newCredit = oldCredit + tokensToBuy;
-        userCredits[msg.sender] = CreditPerLaunchPad(newCredit, launchpads[_launchpadId].tokenAddress);
+
+        //increment wei sent
+        uint oldweiSent = userCredits[msg.sender].weiSent;
+        uint _weiSent = oldweiSent + msg.value;
+
+        userCredits[msg.sender] = CreditPerLaunchPad(newCredit, launchpads[_launchpadId].tokenAddress, _weiSent);
     }
 
     /// AFTER SALES
@@ -263,13 +269,17 @@ contract LaunchPad {
         userCredits[msg.sender].credits = 0;
 
         if (launchpads[_launchPadId].creditType == 1){
+
             //user withdraw ETH
-            (bool sent, ) = msg.sender.call {value: amount}("");
+            (bool sent, ) = msg.sender.call {value: userCredits[msg.sender].weiSent}("");
             require(sent, "Failed to send Ether");
+
         } else if ((launchpads[_launchPadId].creditType == 2)){
+
             //user withdraw token
             ERC20 customToken = ERC20(launchpads[_launchPadId].tokenAddress);
             require(customToken.transfer(msg.sender, amount), "unable to send money");
+
         }   
     }
     
