@@ -2,7 +2,7 @@
 
 ## Contracts
 
-[LaunchPad.sol](contracts/LaunchPad.sol)
+[LaunchPad.sol](contracts/LaunchPad.sol): deployed to [Ropsten testnet](https://ropsten.etherscan.io/address/0x709DAD9877dB6CecC065B0603E8F9761d631bE8A#code)
 
 ## Test files
 
