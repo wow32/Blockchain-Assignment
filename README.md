@@ -1,4 +1,4 @@
-# Blockchain-Assignment
+# BMIS2003 Blockchain Assignment
 
 ## Contracts
 
@@ -86,6 +86,34 @@ npm install -g --save-dev solidity-coverage
 truffle run coverage
 ```
 
+## Testnet deployment
+1. Install HD Wallet
+```
+npm install @truffle/hdwallet-provider
+```
+
+2. Create .env file and fill up required values
+```
+ROPSTEN_RPC_URL=wss://ropsten.infura.io/ws/v3/VALUE
+MNEMONIC="VALUE"
+```
+
+3. Compile contract
+```
+truffle compile
+```
+
+4. Fund some ETH from faucets for gas fees
+
+5. Deploy to Ropsten testnet
+```
+truffle migrate --network ropsten
+```
+
+## Contract verification
+- [Verified contract on Ropsten testnet](https://ropsten.etherscan.io/address/0x709DAD9877dB6CecC065B0603E8F9761d631bE8A#code)
+- Automatic verification using [truffle-plugin-verify](https://www.npmjs.com/package/truffle-plugin-verify)
+
 ## Work Flow (legacy)
 1. Developer deposit tokens 
 - Handle max capacity
@@ -129,11 +157,13 @@ truffle run coverage
 - [x] Map credit to multiple launchpad id
 - [x] Refactor code for readability
 - [x] Getters for minimum and maximum price per token
-- [ ] Testnet deployment and testing
-- [ ] Contract verification
+- [x] Testnet deployment and testing
+- [x] Contract verification
 - [ ] Finalize README
 
 ## References
 1. https://eth-converter.com/
 2. https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC20
 3. https://blog.colony.io/code-coverage-for-solidity-eecfa88668c2/
+4. https://kalis.me/verify-truffle-smart-contracts-etherscan/
+5. https://forum.openzeppelin.com/t/how-to-verify-with-hardhat-or-truffle-a-smart-contract-using-openzeppelin-contracts/4119
