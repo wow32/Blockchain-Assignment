@@ -34,7 +34,7 @@ App = {
     },
     
     initContract: function() {
-      $.getJSON('LaunchPad.json', function(data) {
+      $.getJSON('LaunchPad.json', 'EmoToken.json', 'MyToken.json', function(data) {
         // Get the necessary contract artifact file and instantiate it with @truffle/contract
         var AdoptionArtifact = data;
         App.contracts.Adoption = TruffleContract(AdoptionArtifact);
