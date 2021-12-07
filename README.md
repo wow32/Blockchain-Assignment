@@ -96,6 +96,7 @@ npm install @truffle/hdwallet-provider
 ```
 ROPSTEN_RPC_URL=wss://ropsten.infura.io/ws/v3/VALUE
 MNEMONIC="VALUE"
+ETHERSCANAPIKEY=VALUE
 ```
 
 3. Compile contract
