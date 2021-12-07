@@ -233,11 +233,26 @@ contract LaunchPad {
 
         //calculate ETH amount to be sent
         uint tokenInEth = 1 ether / launchpads[_launchpadId].pricePerToken;
-        uint amount = launchpads[_launchpadId].originalAmountofTokens * tokenInEth;
+
+        uint amount;
+
+        
+        if (launchpads[_launchpadId].totalTokens > 0){
+
+            //milestone achieved but not all tokens are bought
+            uint tokensBought = launchpads[_launchpadId].originalAmountofTokens - launchpads[_launchpadId].totalTokens;
+            amount = tokensBought * tokenInEth; //unbought tokens are left in contract
+
+        } else {
+
+            //no tokens left
+             amount = launchpads[_launchpadId].originalAmountofTokens * tokenInEth;
+
+        }
 
         //send ETH to dev
         (bool sent, ) = launchpads[_launchpadId].sender.call{value: amount}("");
-        require(sent, "Failed to send Ether");
+        require(sent, "Fail to send ether");
 
         emit succeedLaunchpad(amount);
     }

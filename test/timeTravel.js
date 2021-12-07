@@ -148,8 +148,8 @@ contract("LaunchPad", (accounts) => {
         //record new contract balance
         const new_launchpad_balance = await web3.eth.getBalance(launchpad_contract.address)
 
+        //calculate difference
         const contractDiff = launchpad_balance - new_launchpad_balance
-        const userDiff = newTokenBalance - oldTokenBalance
 
         //logging
         console.log("Contract's left ETH: " + web3.utils.fromWei(contractDiff.toString(), "ether"))
@@ -160,6 +160,63 @@ contract("LaunchPad", (accounts) => {
 
     it("buyer cannot withdraw more than one time", async() => {
         //expect fail since already withdrawn
+        await expectRevert(
+            launchpad_contract.withdrawCredits(1, { from: buyer }),
+            "nothing to withdraw"
+        )
+    })
+
+    it("should allow user withdraw once percentage accepted", async() => {
+
+        //create new launchpad because duplicate launchpads are not allowed
+        await token_contract.increaseAllowance(launchpad_contract.address, 10000, { from: token_owner });
+        const protocolFee = await launchpad_contract.estimateProtocolFee(tokensToLaunch);
+        await launchpad_contract.launchMyToken(1, 30, 60, 1000, tokensToLaunch, token_contract.address, { value: protocolFee, from: token_owner });
+
+        //calculate required ETH to purchase tokens
+        const value = await launchpad_contract.launchpads.call(2);
+        console.log("Milestone required: " + value.milestone)
+        const priceInEth = 10 ** 18 / value.pricePerToken
+        const amount = priceInEth * value.milestone
+        console.log("Price in ETH to achieve milestone: " + web3.utils.fromWei(amount.toString(), "ether"))
+        await launchpad_contract.buyLaunchPadToken(2, { value: amount, from: buyer })
+
+        //verify enough tokens bought to trigger milestone
+        const creditValue = await launchpad_contract.userCredits.call(buyer);
+        expect(creditValue.credits).to.eql(value.milestone)
+
+        //settle launchpad and withdraw
+        await launchpad_contract.settleLaunchPad(2, { from: buyer })
+        await launchpad_contract.withdrawCredits(2, { from: buyer })
+
+        //tokens withdraw, user credit should be 0
+        const _creditValue = await launchpad_contract.userCredits.call(buyer);
+        assert.equal(_creditValue.credits.toNumber(), 0, "Error: User withdrawn but credit is not 0!")
+    });
+
+    it("should allow settle launchpad after ending timestamp", async() => {
+        //skip to launchpad ending timestamp
+        const oldValue = await launchpad_contract.launchpads.call(2);
+        await time.increaseTo(oldValue.endTimeStamp.add(time.duration.days(1)))
+
+        //verification
+        const minimumPrice = await launchpad_contract.retrievePriceForToken(1);
+        await expectRevert(
+            launchpad_contract.buyLaunchPadToken(2, { from: buyer, value: minimumPrice }),
+            "it already ended"
+        );
+
+        //is the developer paid?
+        const value = await launchpad_contract.launchpads.call(2);
+        console.log("Is the developer paid? " + value.paid)
+        assert.equal(value.paid, false, "Developer is set to paid but it's actually not")
+        console.log("Developer address: " + value.sender)
+        assert.equal(value.sender, token_owner, "Error: Developer address is incorrect!")
+
+        //settle launchpad and pay ETH to dev
+        await launchpad_contract.settleLaunchPad(2, { from: buyer })
+
+        //user shouldn't able to withdraw again, despite settle launchpad twice
         await expectRevert(
             launchpad_contract.withdrawCredits(1, { from: buyer }),
             "nothing to withdraw"
