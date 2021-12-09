@@ -1,61 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Pete's Pet Shop</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">Pete's Pet Shop</h1>
-          <hr/>
-          <br/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <style>
+
+        .container{
+                    margin-top: 8%;
+                    margin-left: 8%;
+        }
+
+        .card-img-top {
+            border-radius: 50%;
+            width: 100px; 
+            height: 100px;
+        }
+
+        body {
+            background-image: url('images/back.jpg');      
+            background-repeat: no-repeat;
+            background-size: cover;  
+        }
+
+
+        #launchRow{
+            margin-top: 8%;
+            margin-left: 20%;
+        }
+
+        .card:hover{
+            -webkit-box-shadow: -1px 9px 40px -12px black;
+            -moz-box-shadow: -1px 9px 40px -12px black;
+            box-shadow: -1px 9px 40px -12px black;
+            cursor: pointer;
+        }
+        .card-title {
+        color: white;
+        }
+
+        .card {
+            background-image: url("images/background.jpg");
+            height:420px;
+        }
+
+        h6{
+            color: wheat;
+        }
+
+        .card-text {
+            color: wheat;
+            font-size: 12px;
+        }
+
+        hr {
+            border-top: 1px solid white;
+        }
+
+        p {
+            color:white;
+        }
+
+        .price {
+            color:white;
+        }
+
+        .price-tag {
+            color:aqua;
+        }
+
+        .start-time {
+            color:aqua;
+        }
+
+        img {
+            width:50px;
+            height:50px;
+            border-radius: 50%;
+        }
+
+        button{
+            background: linear-gradient(90deg, #755bea, #ff72c0)
+        }
+
+
+
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-transparent fixed-top mt-3">
+            <a class="navbar-brand ml-4" href="#"><img src="images/logo.jpg"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon">
+                </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+              <a class="navbar-brand" href="#">Launchpad</a>
+              
+        </form>
+            </div>
+          </nav>
+          <br>
+          <br>
+          <br>
+
+
+
+        <div class="container">
+            <div class="row" id="load">
+                <div class="col-4-lg ml-5" id="template"  style="display:none">
+                    <div class="card border-danger" style="width:18rem;">
+                        <img class="card-img-top ml-1 mt-1">
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <h6>$CHEESUS</h6>
+                            <p class="card-text">
+                            </p>
+                            <p>
+                              <i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            </p>
+                            <hr>
+                            <h8 class="price">
+                                Price : <h8 class="price-tag"></h8>
+                            </h8>
+                            <br>
+                            <h8 class="price">
+                                Start : <h8 class="start-time">1 Dec, 12:30 UTC</h8>
+                            </h8>
+                            <br>
+                            <div style="padding-top: 5px; padding-left: 200px;">
+                            <button class="btn"><strong>Buy</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-      </div>
 
-      <div id="petsRow" class="row">
-        <!-- PETS LOAD HERE -->
-      </div>
-    </div>
+        <script>
+            $(document).ready(function(){
+                $('.col-4-lg').hover(
+                    function(){
+                        $(this).animate({
+                            marginTop: "-=1%",
+                        },200);
+                    },
 
-    <div id="petTemplate" style="display: none;">
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="panel panel-default panel-pet">
-          <div class="panel-heading">
-            <h3 class="panel-title">Scrappy</h3>
-          </div>
-          <div class="panel-body">
-            <img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true">
-            <br/><br/>
-            <strong>Breed</strong>: <span class="pet-breed">Golden Retriever</span><br/>
-            <strong>Age</strong>: <span class="pet-age">3</span><br/>
-            <strong>Location</strong>: <span class="pet-location">Warren, MI</span><br/><br/>
-            <button class="btn btn-default btn-adopt" type="button" data-id="0">Adopt</button>
-          </div>
-        </div>
-      </div>
-    </div>
+                    function(){
+                        $(this).animate({
+                            marginTop: "0%",
+                        },200);
+                    }
+                );
+            });
+        </script>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+            <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
-  </body>
+
+    </body>
 </html>
