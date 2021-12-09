@@ -16,6 +16,18 @@
 #### Example coverage report
 ![](coverage_report.png)
 
+## Starting Dapp
+> In case of NPM errors, consider removing `node_modules` and installing via `npm i`
+#### Install lite-server
+```
+npm install lite-server --save-dev
+```
+
+#### Start the server
+```
+npm run dev
+```
+
 ## Testing in Remix IDE
 1. Deploy Launchpad
 1. Deploy custom ERC20 token
