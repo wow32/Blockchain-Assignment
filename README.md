@@ -16,14 +16,22 @@
 #### Example coverage report
 ![](coverage_report.png)
 
-## Starting Dapp
+## Starting dApp
 > In case of NPM errors, consider removing `node_modules` and installing via `npm i`
 #### Install lite-server
 ```
 npm install lite-server --save-dev
 ```
+1. Start a local node via Ganache
 
-#### Start the server
+2. Import account's private key into Metamask
+
+3. Migrate contracts
+```
+truffle migrate
+```
+
+4. Start the server
 ```
 npm run dev
 ```
@@ -100,7 +108,7 @@ truffle compile
 
 #### Start local development node in new terminal
 ```
-ganache-cli
+ganache-cli -p 7545
 ```
 #### Install Openzeppelin test helpers
 ```
