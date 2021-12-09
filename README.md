@@ -1,13 +1,5 @@
 # BMIS2003 Blockchain Assignment
 
-
-## GitHub COMMAND
-1. git clone https://github.com/wow32/Blockchain-Assignment (get all the files)
-2. code . (open visual code)
-3. git add . (include all the files)
-4. git commit -m "xxxx" (commit & add the message)
-5. git push 
-
 ## Contracts
 
 [LaunchPad.sol](contracts/LaunchPad.sol): deployed to [Ropsten testnet](https://ropsten.etherscan.io/address/0x709DAD9877dB6CecC065B0603E8F9761d631bE8A#code)
@@ -56,6 +48,28 @@ Example:
     }
 ```
 The above example shows that the developer is required to deposit 0.1 ETH as protocol fees when attempting to launch 1000 tokens to the launchpad set at 1%.
+
+## Using Git CLI
+1. Retrieve all files
+```
+git clone https://github.com/wow32/Blockchain-Assignment
+```
+2. Open VS code
+```
+code .
+```
+3. Include files for commit
+```
+git add .
+```
+4. Commit locally
+```
+git commit -m "message"
+```
+5. Push to main branch
+```
+git push 
+```
 
 
 ## Installation and Truffle testing
