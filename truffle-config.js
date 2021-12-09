@@ -18,11 +18,14 @@
  *
  */
 
-const HDWalletProvider = require('@truffle/hdwallet-provider');
-require('dotenv').config()
+// uncomment below when deployment
+// const HDWalletProvider = require('@truffle/hdwallet-provider');
+// require('dotenv').config()
 
 module.exports = {
-    plugins: ["solidity-coverage", "truffle-plugin-verify"],
+    // uncomment when deployment
+    // plugins: ["solidity-coverage", "truffle-plugin-verify"],
+
     /**
      * Networks define how you connect to your ethereum client and let you set the
      * defaults web3 uses to send transactions. If you don't specify one truffle
@@ -73,9 +76,9 @@ module.exports = {
         // }
     },
 
-    api_keys: {
-        etherscan: process.env.ETHERSCANAPIKEY
-    },
+    // api_keys: {
+    //     etherscan: process.env.ETHERSCANAPIKEY
+    // },
 
     // Set default mocha options here, use special reporters etc.
     mocha: {

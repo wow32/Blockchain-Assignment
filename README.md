@@ -52,7 +52,7 @@ The above example shows that the developer is required to deposit 0.1 ETH as pro
 
 
 ## Installation and Truffle testing
-> To develop use Remix IDE directly
+> The following setup is tested in Linux, Windows user should modify the configuration accordingly
 
 #### Clone the GitHub repository
 
