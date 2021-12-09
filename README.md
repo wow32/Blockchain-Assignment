@@ -1,5 +1,13 @@
 # BMIS2003 Blockchain Assignment
 
+
+## GitHub COMMAND
+1. git clone https://github.com/wow32/Blockchain-Assignment (get all the files)
+2. code . (open visual code)
+3. git add . (include all the files)
+4. git commit -m "xxxx" (commit & add the message)
+5. git push 
+
 ## Contracts
 
 [LaunchPad.sol](contracts/LaunchPad.sol): deployed to [Ropsten testnet](https://ropsten.etherscan.io/address/0x709DAD9877dB6CecC065B0603E8F9761d631bE8A#code)
@@ -15,7 +23,6 @@
 
 #### Example coverage report
 ![](coverage_report.png)
-
 
 ## Testing in Remix IDE
 1. Deploy Launchpad
