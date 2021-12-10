@@ -234,53 +234,53 @@ App = {
         });
     },
 
-   bindEvents: function() {
+    bindEvents: function() {
         $(document).on('click', '.btn-buy', App.handleBuy);
-      },
+    },
 
-      markBought: function() {
+    markBought: function() {
         var adoptionInstance;
 
         App.contracts.Adoption.deployed().then(function(instance) {
-          adoptionInstance = instance;
+            adoptionInstance = instance;
 
-          return adoptionInstance.getAdopters.call();
+            return adoptionInstance.getAdopters.call();
         }).then(function(adopters) {
-        //   for (i = 0; i < adopters.length; i++) {
-        //     if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-        //       $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
-        //     }
-        //   }
+            //   for (i = 0; i < adopters.length; i++) {
+            //     if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
+            //       $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
+            //     }
+            //   }
         }).catch(function(err) {
-          console.log(err.message);
+            console.log(err.message);
         });
 
-      },
+    },
 
-      handleBuy: function(event) {
+    handleBuy: function(event) {
         event.preventDefault();
 
         var launchpadID = parseInt($(event.target).data('id'));
         var adoptionInstance;
 
         web3.eth.getAccounts(function(error, accounts) {
-        if (error) {
-          console.log(error);
-        }
+            if (error) {
+                console.log(error);
+            }
 
-      var account = accounts[0];
+            var account = accounts[0];
 
-       App.contracts.Adoption.deployed().then(function(instance) {
-          adoptionInstance = instance;
+            App.contracts.Adoption.deployed().then(function(instance) {
+                adoptionInstance = instance;
 
-          // Execute adopt as a transaction by sending account
-          return adoptionInstance.adopt(launchpadID, {from: account});
-        }).then(function(result) {
-          return App.markBought();
-        }).catch(function(err) {
-          console.log(err.message);
+                // Execute adopt as a transaction by sending account
+                return adoptionInstance.adopt(launchpadID, { from: account });
+            }).then(function(result) {
+                return App.markBought();
+            }).catch(function(err) {
+                console.log(err.message);
+            });
         });
-      });
 
     }
 
