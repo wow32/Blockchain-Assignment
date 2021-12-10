@@ -210,22 +210,42 @@ App = {
                     //prepare variables to load them via loop
                     var launchpad_info;
 
+                    // example of retrieving the mapping :)
+                    // var test = await launchPadInstance.launchpads.call(1);
+                    // console.log(test[0].c[0])
+
+                    // function convertTimeStampToDate(timestamp) {
+                    //     return new Date(timestamp).toLocaleDateString("en-US")
+                    // }
+
                     for (i = 1; i <= totalLaunchPads; i++) {
                         launchpad_info = await launchPadInstance.launchpads.call(i);
+                        console.log(launchpad_info)
 
                         //https://github.com/wow32/Blockchain-Assignment/blob/main/contracts/LaunchPad.sol#L15-L25
 
-                        template.find('.card-title').text("data[i].name");
+                        template.find('.btn-buy').attr('data-id', i);
+                        template.find('.card-title').text("TOKEN");
                         template.find('img').attr('src', "images/token.jpg");
                         template.find('.card-text').text("Description about token");
-                        console.log(launchpad_info.sender) //example of retrieving sender
-                        template.find('.price-tag').text(launchpad_info.pricePerToken);
+
+                        template.find('.startTime').text(launchpad_info[0].c[0]);
+                        template.find('.endTime').text(launchpad_info[1].c[0]);
+                        template.find('.percentage').text(launchpad_info[2].c[0] + "%");
+                        template.find('.milestone').text(launchpad_info[3].c[0]);
+                        template.find('.oriTokens').text(launchpad_info[4].c[0]);
+                        template.find('.totalTokens').text(launchpad_info[5].c[0]);
+                        template.find('.pricePerToken').text(launchpad_info[6].c[0]);
+                        template.find('.sender').text(launchpad_info[7]);
+                        template.find('.tokenAddress').text(launchpad_info[8]);
+                        template.find('.paid').text(launchpad_info[9]);
+                        template.find('.creditType').text(launchpad_info[10].c[0]);
 
                         //append info into UI
                         load.append(template.html());
                     }
 
-                    console.log("ENDED")
+                    // console.log("ENDED")
                 }
 
             }).catch(function(err) {
