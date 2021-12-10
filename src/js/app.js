@@ -1,6 +1,7 @@
 /*
  * http://trufflesuite.com/tutorial/#creating-a-user-interface-to-interact-with-the-smart-contract
  * https://ethereum.org/en/developers/tutorials/calling-a-smart-contract-from-javascript/
+ * https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#id32
  */
 
 
@@ -74,7 +75,7 @@ App = {
             App.contracts.MyToken = TruffleContract(MyTokenArtifact);
             App.contracts.MyToken.setProvider(App.web3Provider);
             //console.log(data)
-            return App.dummyToken();
+            return App.dummyToken(data);
         });
 
         //wtf is this?
@@ -108,7 +109,7 @@ App = {
         });
     },
 
-    dummyToken: function() {
+    dummyToken: function(data) {
         //this function is for testing a simple token in launchpad, remove in production
         var tokenInstance;
         web3.eth.getAccounts(function(error, accounts) {
@@ -117,10 +118,13 @@ App = {
             }
 
             App.contracts.MyToken.deployed().then(function(instance) {
-
                 tokenInstance = instance;
 
-                // retrieve owner of contract
+                //thanks web3 :)
+                var MyContract = new web3.eth.contract(data, tokenInstance.address)
+                const fuck = MyContract
+                console.log(fuck)
+                    // retrieve owner of contract
                 return tokenInstance.admin();
 
             }).then(async function(result) {
@@ -136,12 +140,13 @@ App = {
                 console.log("LaunchPad contract address: " + launchpad.address)
 
                 //retrieve allowance before increasing it
-                console.log(await tokenInstance)
-                    //await tokenInstance.allowance(result, launchpad, { from: result })
+
+                console.log(await tokenInstance.allowance([1, 2], { from: result }))
+                    //const value = await tokenInstance.allowance(result, launchpad)
                     //console.log("Current allowance: " + value)
 
                 //handle allowance
-                //await tokenInstance.increaseAllowance(launchpad, 1000)
+                //await tokenInstance.increaseAllowance(launchpad, 10000)
 
             }).catch(function(err) {
                 console.error(err.message);
