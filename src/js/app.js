@@ -20,6 +20,18 @@ App = {
                 template.find('img').attr('src', data[i].picture);
                 template.find('.card-text').text(data[i].description);
                 template.find('.price-tag').text(data[i].price);
+                template.find('.startTime').text(data[i].startTimeStamp);
+                template.find('.endTime').text(data[i].endTimeStamp);
+                template.find('.percentage').text(data[i].acceptancePercentage);
+                template.find('.milestone').text(data[i].milestone);
+                template.find('.oriTokens').text(data[i].originalAmountofTokens);
+                template.find('.totalTokens').text(data[i].totalTokens);
+                template.find('.pricePerToken').text(data[i].pricePerToken);
+                template.find('.sender').text(data[i].sender);
+                template.find('.tokenAddress').text(data[i].tokenAddress);
+                template.find('.paid').text(data[i].paid);
+                template.find('.creditType').text(data[i].creditType);
+                template.find('.btn-buy').attr('data-id', data[i].id);
 
 
                 load.append(template.html());
@@ -208,55 +220,55 @@ App = {
         });
     },
 
-    //   bindEvents: function() {
-    //     $(document).on('click', '.btn-adopt', App.handleAdopt);
-    //   },
+   bindEvents: function() {
+        $(document).on('click', '.btn-buy', App.handleBuy);
+      },
 
-    //   markAdopted: function() {
-    //     var adoptionInstance;
+      markBought: function() {
+        var adoptionInstance;
 
-    //     App.contracts.Adoption.deployed().then(function(instance) {
-    //       adoptionInstance = instance;
+        App.contracts.Adoption.deployed().then(function(instance) {
+          adoptionInstance = instance;
 
-    //       return adoptionInstance.getAdopters.call();
-    //     }).then(function(adopters) {
-    //       for (i = 0; i < adopters.length; i++) {
-    //         if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-    //           $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
-    //         }
-    //       }
-    //     }).catch(function(err) {
-    //       console.log(err.message);
-    //     });
+          return adoptionInstance.getAdopters.call();
+        }).then(function(adopters) {
+        //   for (i = 0; i < adopters.length; i++) {
+        //     if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
+        //       $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
+        //     }
+        //   }
+        }).catch(function(err) {
+          console.log(err.message);
+        });
 
-    //   },
+      },
 
-    //   handleAdopt: function(event) {
-    //     event.preventDefault();
+      handleBuy: function(event) {
+        event.preventDefault();
 
-    //     var animalId = parseInt($(event.target).data('id'));
-    //     var adoptionInstance;
+        var launchpadID = parseInt($(event.target).data('id'));
+        var adoptionInstance;
 
-    //     web3.eth.getAccounts(function(error, accounts) {
-    //     if (error) {
-    //       console.log(error);
-    //     }
+        web3.eth.getAccounts(function(error, accounts) {
+        if (error) {
+          console.log(error);
+        }
 
-    //   var account = accounts[0];
+      var account = accounts[0];
 
-    //    App.contracts.Adoption.deployed().then(function(instance) {
-    //       adoptionInstance = instance;
+       App.contracts.Adoption.deployed().then(function(instance) {
+          adoptionInstance = instance;
 
-    //       // Execute adopt as a transaction by sending account
-    //       return adoptionInstance.adopt(animalId, {from: account});
-    //     }).then(function(result) {
-    //       return App.markAdopted();
-    //     }).catch(function(err) {
-    //       console.log(err.message);
-    //     });
-    //   });
+          // Execute adopt as a transaction by sending account
+          return adoptionInstance.adopt(launchpadID, {from: account});
+        }).then(function(result) {
+          return App.markBought();
+        }).catch(function(err) {
+          console.log(err.message);
+        });
+      });
 
-    // }
+    }
 
 };
 
