@@ -87,6 +87,7 @@ App = {
             App.contracts.MyToken = TruffleContract(MyTokenArtifact);
             App.contracts.MyToken.setProvider(App.web3Provider);
             //console.log(data)
+
             return App.dummyToken(data);
         });
 
@@ -121,9 +122,10 @@ App = {
         });
     },
 
-    dummyToken: function(data) {
+    dummyToken: function() {
         //this function is for testing a simple token in launchpad, remove in production
         var tokenInstance;
+
         web3.eth.getAccounts(function(error, accounts) {
             if (error) {
                 console.log(error);
@@ -170,6 +172,57 @@ App = {
                 console.error(err.message);
             });
         });
+    },
+
+    provideAllowance: function(amount_of_tokens, token_contract) { //App.provideAllowance(10000, "0xfde85664450783268f206c13605cd80d22b41b10")
+        //before launching token, developer should run this function so their contract gives allowance to launchpad contract
+        web3.eth.getAccounts(function(error, accounts) {
+            if (error) {
+                console.log(error);
+            }
+
+            //we are only accepting ERC20, hence we reuse the ABI from MyToken contract
+            $.getJSON('MyToken.json', function(data) {
+                // var CustomTokenArtifact = data;
+                // App.contracts.CustomToken = TruffleContract(CustomTokenArtifact);
+                // App.contracts.CustomToken.setProvider(App.web3Provider);
+
+                //Reference: https://web3js.readthedocs.io/en/v1.2.11/web3.html#id12
+                var contract = web3.eth.contract(data.abi).at(token_contract);
+
+                console.log(accounts)
+                    //must include callback or else will fail
+                contract.balanceOf(web3.eth.accounts[0], {}, function(error, result) {
+                    if (!error) {
+                        console.log("User balance in contract: " + result)
+                    } else {
+                        console.error(error.code)
+                    }
+                })
+
+                App.contracts.LaunchPad.deployed().then(function(instance) {
+
+                    launchpad = instance;
+
+                }).then(function(result) {
+
+                    console.log(launchpad.address)
+
+                    contract.increaseAllowance(launchpad.address, amount_of_tokens, {}, function(error, result) {
+                        if (!error) {
+                            console.log(result)
+                        } else {
+                            console.error(error.message)
+                        }
+                    });
+
+                }).catch(function(err) {
+                    console.error(err.message);
+                });
+
+            });
+
+        })
     },
 
     displayLaunchPads: function() {
