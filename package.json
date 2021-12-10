@@ -14,5 +14,10 @@
   "license": "ISC",
   "devDependencies": {
     "lite-server": "^2.6.1"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.0.1",
+    "bn.js": "^5.2.0",
+    "web3": "^1.6.1"
   }
 }

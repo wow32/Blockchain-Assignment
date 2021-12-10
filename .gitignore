@@ -2,3 +2,4 @@
 coverage.json
 coverageEnv
 .env
+node_modules

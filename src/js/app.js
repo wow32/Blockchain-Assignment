@@ -4,7 +4,6 @@
  * https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#id32
  */
 
-
 App = {
     web3Provider: null,
     contracts: {},
@@ -129,7 +128,7 @@ App = {
                 console.log("Admin of MyToken contract: " + result)
 
                 //retrieve user balance
-                const balance = await tokenInstance.balanceOf(result)
+                const balance = await tokenInstance.balanceOf(web3.eth.accounts[0])
                 console.log("User balance: " + balance)
 
                 //retrieve launchpad contract address
@@ -142,10 +141,18 @@ App = {
                 console.log("Current allowance: " + value)
 
                 //handle allowance
-                await tokenInstance.increaseAllowance(launchpad.address, 10000);
+                //await tokenInstance.increaseAllowance(launchpad.address, 10000);
 
+                //show new allowance balance
                 const newValue = await tokenInstance.allowance(accounts, launchpad.address)
                 console.log("New allowance: " + newValue)
+
+                //estimate protocol fee
+
+                const protocolFee = await launchpad.estimateProtocolFee(10000);
+                console.log("Protocol fee: " + protocolFee)
+
+                //await launchpad.launchMyToken(1, 30, 60, 1000, 10000, tokenInstance.address, { gas: 3000000, value: protocolFee });
 
             }).catch(function(err) {
                 console.error(err.message);
@@ -168,7 +175,7 @@ App = {
                 // find how many launchpads are available
                 return launchPadInstance.totalLaunchpads({ from: accounts });
 
-            }).then(function(result) {
+            }).then(async function(result) {
 
                 console.log("Total launchpads: " + result)
 
@@ -191,15 +198,22 @@ App = {
                     //prepare variables to load them via loop
                     var launchpad_info;
 
-                    for (i = 0; i < totalLaunchPads.length; i++) {
-                        launchpad_info = launchPadInstance.launchpads.call(i);
-                        //take all from here https://github.com/wow32/Blockchain-Assignment/blob/main/contracts/LaunchPad.sol#L15-L25
+                    for (i = 1; i <= totalLaunchPads; i++) {
+                        launchpad_info = await launchPadInstance.launchpads.call(i);
+
+                        //https://github.com/wow32/Blockchain-Assignment/blob/main/contracts/LaunchPad.sol#L15-L25
+
+                        template.find('.card-title').text("data[i].name");
+                        template.find('img').attr('src', "images/token.jpg");
+                        template.find('.card-text').text("Description about token");
                         console.log(launchpad_info.sender) //example of retrieving sender
                         template.find('.price-tag').text(launchpad_info.pricePerToken);
 
                         //append info into UI
                         load.append(template.html());
                     }
+
+                    console.log("ENDED")
                 }
 
             }).catch(function(err) {
