@@ -237,7 +237,7 @@ App = {
 
                 launchpad = instance;
 
-            }).then(function(result) {
+            }).then(async function(result) {
 
                 console.log(launchpad.address)
 
