@@ -3,5 +3,16 @@
     "name": "UWU",
     "picture": "images/token.jpg",
     "description": "Hardcoded",
-    "price": "0.1 ETH"
+    "price": "0.1 ETH",
+    "startTimeStamp": "08:10 AM",
+    "endTimeStamp": "08:20 AM",
+    "acceptancePercentage": "60%",
+    "milestone": "600",
+    "originalAmountofTokens": "1000",
+    "totalTokens": "500",
+    "pricePerToken": "0.001 ETH",
+    "sender": "0x7851366dab0E39C426e4725Bef4D4CDe1228c2C4",
+    "tokenAddress": "0x7851366dab0E39C426e4725Bef4D4CDe1228c2C4",
+    "paid": "yes",
+    "creditType": "Unset"
 }]
