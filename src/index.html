@@ -1,188 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-         .container{
-                    margin-top: 2%;
-                    margin-left: 20%;
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .container {
+            margin-top: 2%;
+            margin-left: 20%;
         }
-
+        
         .card-img-top {
             border-radius: 50%;
-            width: 100px; 
+            width: 100px;
             height: 100px;
         }
-
+        
         body {
-            background-image: url('images/back.jpg');      
+            background-image: url('images/back.jpg');
             background-repeat: no-repeat;
-            background-size: cover;  
+            background-size: cover;
         }
-
-
-        #launchRow{
+        
+        #launchRow {
             margin-top: 8%;
             margin-left: 20%;
         }
-
-        .card:hover{
+        
+        .card:hover {
             -webkit-box-shadow: -1px 9px 40px -12px black;
             -moz-box-shadow: -1px 9px 40px -12px black;
             box-shadow: -1px 9px 40px -12px black;
             cursor: pointer;
         }
+        
         .card-title {
-        color: white;
+            color: white;
         }
-
+        
         .card {
             background-image: url("images/background.jpg");
-            height:420px;
+            height: 420px;
         }
-
-        h6{
+        
+        h6 {
             color: wheat;
         }
-
+        
         .card-text {
             color: wheat;
             font-size: 12px;
         }
-
+        
         hr {
             border-top: 1px solid white;
         }
-
+        
         p {
-            color:white;
+            color: white;
         }
-
+        
         .price {
-            color:white;
+            color: white;
         }
-
+        
         .price-tag {
-            color:aqua;
+            color: aqua;
         }
-
+        
         .start-time {
-            color:aqua;
+            color: aqua;
         }
-
+        
         img {
-            width:50px;
-            height:50px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
         }
-
-        button{
+        
+        button {
             background: linear-gradient(90deg, #755bea, #ff72c0)
         }
+    </style>
+</head>
 
-
-
-        </style>
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-md navbar-dark bg-transparent fixed-top mt-3">
-            <a class="navbar-brand ml-4" href="#"><img src="images/logo.jpg"></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-transparent fixed-top mt-3">
+        <a class="navbar-brand ml-4" href="#"><img src="images/logo.jpg"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon">
                 </span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-              <a class="navbar-brand" href="#">Launchpad</a>
-              
-        </form>
-            </div>
-          </nav>
-          <br>
-          <br>
-          <br>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="#">Launchpad</a>
+
+            </form>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <br>
 
 
 
-        <div class="container">
-            <div class="row" id="load">
-                <div class="col-4-lg ml-5" id="template"  style="display:none">
-                    <div class="card border-danger" style="width:18rem;">
-                        <img class="card-img-top ml-1 mt-1">
-                        <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <h6>$CHEESUS</h6>
-                            <p class="card-text">
-                            </p>
-                            <p>
-                              <i class="fa fa-twitter" aria-hidden="true"></i></a>
-                            </p>
-                            <hr>
-                            <h8 class="price">
-                                Price : <h8 class="price-tag"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Start Time : <h8 style="color: aqua" class="startTime"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                End Time : <h8 style="color: aqua" class="endTime"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Percentage : <h8 style="color: aqua" class="percentage"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Milestone : <h8 style="color: aqua" class="milestone"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Orignal Tokens : <h8 style="color: aqua" class="oriTokens"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Total Tokens : <h8 style="color: aqua" class="totalTokens"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Price per Token : <h8 style="color: aqua" class="pricePerToken"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Sender : <h8 style="color: aqua" class="sender"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                tokenAddress : <h8 style="color: aqua" class="tokenAddress"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Paid : <h8 style="color: aqua" class="paid"></h8>
-                            </h8>
-                            <br>
-                            <h8 style="color:white">
-                                Credit Type : <h8 style="color: aqua" class="creditType"></h8>
-                            </h8>
-                            <br>
-                            <div style="padding-top: 5px; padding-left: 200px;">
+    <div class="container">
+        <div class="row" id="load">
+            <div class="col-4-lg ml-5" id="template" style="display:none">
+                <div class="card border-danger" style="width:18rem;">
+                    <img class="card-img-top ml-1 mt-1">
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <h6>$CHEESUS</h6>
+                        <p class="card-text">
+                        </p>
+                        <p>
+                            <i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        </p>
+                        <hr>
+                        <h8 style="color:white">
+                            Start Time :
+                            <h8 style="color: aqua" class="startTime"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            End Time :
+                            <h8 style="color: aqua" class="endTime"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            Percentage :
+                            <h8 style="color: aqua" class="percentage"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            Milestone :
+                            <h8 style="color: aqua" class="milestone"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            Orignal Tokens :
+                            <h8 style="color: aqua" class="oriTokens"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            Total Tokens :
+                            <h8 style="color: aqua" class="totalTokens"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            Price per Token :
+                            <h8 style="color: aqua" class="pricePerToken"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            Sender :
+                            <h8 style="color: aqua" class="sender"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            tokenAddress :
+                            <h8 style="color: aqua" class="tokenAddress"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            Paid :
+                            <h8 style="color: aqua" class="paid"></h8>
+                        </h8>
+                        <br>
+                        <h8 style="color:white">
+                            Credit Type :
+                            <h8 style="color: aqua" class="creditType"></h8>
+                        </h8>
+                        <br>
+                        <div style="padding-top: 5px; padding-left: 200px;">
                             <button id="button-buy" class="btn"><strong>Buy</strong></button>
-                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-        </div>
 
-<!--         <script>
+        </div>
+    </div>
+
+    <!--         <script>
             $(document).ready(function(){
                 $('.col-4-lg').hover(
                     function(){
@@ -200,7 +205,7 @@
             });
         </script> -->
 
-            <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
@@ -208,5 +213,6 @@
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
 
-    </body>
+</body>
+
 </html>

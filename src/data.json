@@ -3,7 +3,6 @@
     "name": "UWU",
     "picture": "images/token.jpg",
     "description": "Hardcoded",
-    "price": "0.1 ETH",
     "startTimeStamp": "08:10 AM",
     "endTimeStamp": "08:20 AM",
     "acceptancePercentage": "60%",
