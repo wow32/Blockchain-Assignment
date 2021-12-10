@@ -174,7 +174,7 @@ App = {
         });
     },
 
-    provideAllowance: function(amount_of_tokens, token_contract) { //App.provideAllowance(10000, "0xfde85664450783268f206c13605cd80d22b41b10")
+    provideAllowance: function(amount_of_tokens, token_contract) { //Example: App.provideAllowance(10000, "0xfde85664450783268f206c13605cd80d22b41b10")
         //before launching token, developer should run this function so their contract gives allowance to launchpad contract
         web3.eth.getAccounts(function(error, accounts) {
             if (error) {
@@ -221,6 +221,43 @@ App = {
                 });
 
             });
+
+        })
+    },
+
+    //not tested :)
+    launchToken: function(_startTime, _numOfDays, _acceptedPercentage, _pricePerToken, _totalTokens, _tokenAddress) {
+        //should run provideAllowance before this
+        web3.eth.getAccounts(function(error, accounts) {
+            if (error) {
+                console.log(error);
+            }
+
+            App.contracts.LaunchPad.deployed().then(function(instance) {
+
+                launchpad = instance;
+
+            }).then(function(result) {
+
+                console.log(launchpad.address)
+
+                const protocolFee = await launchpad.estimateProtocolFee(10000);
+                console.log("Protocol fee: " + protocolFee)
+
+                //Parameters check here: https://github.com/wow32/Blockchain-Assignment/blob/main/contracts/LaunchPad.sol#L85
+                contract.launchMyToken(_startTime, _numOfDays, _acceptedPercentage, _pricePerToken, _totalTokens, _tokenAddress, { gas: 3000000, value: protocolFee }, function(error, result) {
+                    //should handle conversion, however we don't have time for it :(
+                    if (!error) {
+                        console.log(result)
+                    } else {
+                        console.error(error.message)
+                    }
+                });
+
+            }).catch(function(err) {
+                console.error(err.message);
+            });
+
 
         })
     },
