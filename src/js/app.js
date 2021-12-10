@@ -51,6 +51,7 @@ App = {
             App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
         }
         web3 = new Web3(App.web3Provider);
+        web3.eth.defaultAccount = web3.eth.accounts[0] //solve invalid address error //https://ethereum.stackexchange.com/questions/19524/invalid-address-error-when-interacting-with-a-smart-contract-with-metamask/76065
 
         return App.initContract();
     },
@@ -120,11 +121,7 @@ App = {
             App.contracts.MyToken.deployed().then(function(instance) {
                 tokenInstance = instance;
 
-                //thanks web3 :)
-                var MyContract = new web3.eth.contract(data, tokenInstance.address)
-                const fuck = MyContract
-                console.log(fuck)
-                    // retrieve owner of contract
+                // retrieve owner of contract
                 return tokenInstance.admin();
 
             }).then(async function(result) {
@@ -137,16 +134,18 @@ App = {
 
                 //retrieve launchpad contract address
                 var launchpad = await App.contracts.LaunchPad.deployed()
+                console.log(await launchpad.owner())
                 console.log("LaunchPad contract address: " + launchpad.address)
 
                 //retrieve allowance before increasing it
-
-                console.log(await tokenInstance.allowance([1, 2], { from: result }))
-                    //const value = await tokenInstance.allowance(result, launchpad)
-                    //console.log("Current allowance: " + value)
+                const value = await tokenInstance.allowance(accounts, launchpad.address)
+                console.log("Current allowance: " + value)
 
                 //handle allowance
-                //await tokenInstance.increaseAllowance(launchpad, 10000)
+                await tokenInstance.increaseAllowance(launchpad.address, 10000);
+
+                const newValue = await tokenInstance.allowance(accounts, launchpad.address)
+                console.log("New allowance: " + newValue)
 
             }).catch(function(err) {
                 console.error(err.message);
