@@ -1,17 +1,50 @@
-[{
-    "id": 0,
-    "name": "UWU",
-    "picture": "images/token.jpg",
-    "description": "Hardcoded",
-    "startTimeStamp": "08:10 AM",
-    "endTimeStamp": "08:20 AM",
-    "acceptancePercentage": "60%",
-    "milestone": "600",
-    "originalAmountofTokens": "1000",
-    "totalTokens": "500",
-    "pricePerToken": "0.001 ETH",
-    "sender": "0x7851366dab0E39C426e4725Bef4D4CDe1228c2C4",
-    "tokenAddress": "0x7851366dab0E39C426e4725Bef4D4CDe1228c2C4",
-    "paid": "yes",
-    "creditType": "Unset"
-}]
+[
+    {
+        "id": 0,
+        "name": "CHEESUS",
+        "token": "$CHEESUS",
+        "picture": "images/token.jpg",
+        "description": "Cheesus is a multichain DeFi analytical tool that helps you find real gems.",
+        "startTimeStamp": "08:10 AM",
+        "endTimeStamp": "08:20 AM",
+        "acceptancePercentage": "60%",
+        "milestone": "600",
+        "originalAmountofTokens": "1000",
+        "totalTokens": "500",
+        "pricePerToken": "0.001 ETH"
+       
+    },
+
+    {
+        "id": 1,
+        "name": "MOOMONSTER",
+        "token": "$MOO",
+        "picture": "images/token2.jpeg",
+        "description": "Go on an adventure with Moo monster in the new world 'Mooniverse'.",
+        "startTimeStamp": "09:30 AM",
+        "endTimeStamp": "09:40 AM",
+        "acceptancePercentage": "70%",
+        "milestone": "700",
+        "originalAmountofTokens": "1500",
+        "totalTokens": "800",
+        "pricePerToken": "0.1 ETH"
+        
+        },
+
+        {
+            "id": 2,
+            "name": "KAIZEN",
+            "token": "$KAZ",
+            "picture": "images/kaizen1.png",
+            "description": "Kaizen.Finance is a crypto token lifecycle management platform where projects.",
+            "startTimeStamp": "10:10 PM",
+            "endTimeStamp": "10:20 PM",
+            "acceptancePercentage": "50%",
+            "milestone": "600",
+            "originalAmountofTokens": "1300",
+            "totalTokens": "700",
+            "pricePerToken": "0.003 ETH"
+            
+            }
+
+]

@@ -17,6 +17,7 @@ App = {
             for (i = 0; i < data.length; i++) {
                 template.find('.card-title').text(data[i].name);
                 template.find('img').attr('src', data[i].picture);
+                template.find('.token').text(data[i].token);
                 template.find('.card-text').text(data[i].description);
                 template.find('.price-tag').text(data[i].price);
                 template.find('.startTime').text(data[i].startTimeStamp);
@@ -315,10 +316,10 @@ App = {
                         //https://github.com/wow32/Blockchain-Assignment/blob/main/contracts/LaunchPad.sol#L15-L25
 
                         template.find('.btn-buy').attr('data-id', i);
-                        template.find('.card-title').text("TOKEN");
+                        //template.find('.card-title').text("TOKEN");
                         template.find('img').attr('src', "images/token.jpg");
                         template.find('.card-text').text("Description about token");
-
+                        template.find('.token').text(launchpad_info[0].c[0]);
                         template.find('.startTime').text(launchpad_info[0].c[0]);
                         template.find('.endTime').text(launchpad_info[1].c[0]);
                         template.find('.percentage').text(launchpad_info[2].c[0] + "%");
@@ -346,7 +347,10 @@ App = {
 
     bindEvents: function() {
         $(document).on('click', '.btn-buy', App.handleBuy);
+        $(document).on('click', '.allowance', App.provideAllowance(1000, address));
     },
+
+    
 
     markBought: function() {
         var adoptionInstance;
@@ -356,11 +360,11 @@ App = {
 
             return adoptionInstance.getAdopters.call();
         }).then(function(adopters) {
-            //   for (i = 0; i < adopters.length; i++) {
-            //     if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-            //       $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
-            //     }
-            //   }
+              for (i = 0; i < adopters.length; i++) {
+                if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
+                  $('.btn-buy').eq(i).find('button').text('Success').attr('disabled', true);
+                }
+              }
         }).catch(function(err) {
             console.log(err.message);
         });

@@ -16,6 +16,7 @@
     "lite-server": "^2.6.1"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.4.0",
     "bignumber.js": "^9.0.1",
     "bn.js": "^5.2.0",
     "web3": "^1.6.1"

@@ -11,8 +11,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .container {
-            margin-top: 2%;
-            margin-left: 20%;
+            margin-top: 6%;
+            margin-left: 25%;
         }
         
         .card-img-top {
@@ -45,7 +45,7 @@
         
         .card {
             background-image: url("images/background.jpg");
-            height: 420px;
+            height: 530px;
         }
         
         h6 {
@@ -97,8 +97,12 @@
                 </span>
             </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="#">Launchpad</a>
-
+            <a class="navbar-brand" href="#">BioPad - The Safetest Launchpad</a>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            </ul>
+              <button onclick="myFunction()"id="allowance" class="btn btn-success border-white my-2 my-sm-0 allowance" type="submit">Allowance</button>
+              <button onclick="myFunction()" class="btn btn-success border-white my-2 my-sm-0 ml-4" type="submit">Launch Token</button>
+                <p id="address"></p>
             </form>
         </div>
     </nav>
@@ -115,7 +119,7 @@
                     <img class="card-img-top ml-1 mt-1">
                     <div class="card-body">
                         <h5 class="card-title"></h5>
-                        <h6>$TOKEN</h6>
+                        <h6 class="token"></h6>
                         <p class="card-text">
                         </p>
                         <p>
@@ -157,7 +161,7 @@
                             <h8 style="color: aqua" class="pricePerToken"></h8>
                         </h8>
                         <br>
-                        <h8 style="color:white">
+                        <!-- <h8 style="color:white">
                             Sender :
                             <h8 style="color: aqua" class="sender"></h8>
                         </h8>
@@ -175,8 +179,8 @@
                         <h8 style="color:white">
                             Credit Type :
                             <h8 style="color: aqua" class="creditType"></h8>
-                        </h8>
-                        <br>
+                        </h8> -->
+                        <!-- <br> -->
                         <div style="padding-top: 5px; padding-left: 200px;">
                             <button id="button-buy" class="btn"><strong>Buy</strong></button>
                         </div>
@@ -187,23 +191,20 @@
         </div>
     </div>
 
-    <!--         <script>
-            $(document).ready(function(){
-                $('.col-4-lg').hover(
-                    function(){
-                        $(this).animate({
-                            marginTop: "-=1%",
-                        },200);
-                    },
-
-                    function(){
-                        $(this).animate({
-                            marginTop: "0%",
-                        },200);
-                    }
-                );
-            });
-        </script> -->
+            <script>
+                function myFunction() {
+                let text;
+                let address = prompt("Please enter your address:", "");
+                console.log(address);
+                if (address == null || address == "") {
+                    text = "User cancelled the prompt.";
+                } else {
+                    text = "Your address =" + address;
+                }
+                document.getElementById("address").innerHTML = text;
+                }
+                
+        </script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
