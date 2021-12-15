@@ -156,7 +156,7 @@ App = {
                 console.log("Current allowance: " + value)
 
                 //handle allowance
-                //await tokenInstance.increaseAllowance(launchpad.address, 10000);
+                await tokenInstance.increaseAllowance(launchpad.address, 10000, { gas: 3000000 });
 
                 //show new allowance balance
                 const newValue = await tokenInstance.allowance(accounts, launchpad.address)
@@ -167,7 +167,7 @@ App = {
                 const protocolFee = await launchpad.estimateProtocolFee(10000);
                 console.log("Protocol fee: " + protocolFee)
 
-                //await launchpad.launchMyToken(1, 30, 60, 1000, 10000, tokenInstance.address, { gas: 3000000, value: protocolFee });
+                await launchpad.launchMyToken(1, 30, 60, 1000, 10000, tokenInstance.address, { gas: 3000000, value: protocolFee });
 
             }).catch(function(err) {
                 console.error(err.message);
@@ -350,7 +350,7 @@ App = {
         $(document).on('click', '.allowance', App.provideAllowance(1000, address));
     },
 
-    
+
 
     markBought: function() {
         var adoptionInstance;
@@ -360,11 +360,11 @@ App = {
 
             return adoptionInstance.getAdopters.call();
         }).then(function(adopters) {
-              for (i = 0; i < adopters.length; i++) {
+            for (i = 0; i < adopters.length; i++) {
                 if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-                  $('.btn-buy').eq(i).find('button').text('Success').attr('disabled', true);
+                    $('.btn-buy').eq(i).find('button').text('Success').attr('disabled', true);
                 }
-              }
+            }
         }).catch(function(err) {
             console.log(err.message);
         });
